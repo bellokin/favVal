@@ -3,701 +3,756 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Favour 💖</title>
+<title>For Favour 🌹</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Cormorant+Garamond:ital,wght@1,400;1,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&family=Pinyon+Script&display=swap');
 
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;overflow:hidden;background:#06000F;touch-action:none}
-
-#wrap{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
-canvas{display:block;touch-action:none}
-
-/* ── OVERLAY SCREENS ── */
-.ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:18px;text-align:center;padding:24px;
-  background:radial-gradient(ellipse at 50% 40%,rgba(80,0,80,.55) 0%,rgba(6,0,15,.97) 70%);
-  transition:opacity .5s;pointer-events:all;z-index:20}
-.ov.hide{opacity:0;pointer-events:none}
-
-.ov-eye{font-family:'Orbitron',monospace;font-size:clamp(9px,1.8vw,12px);
-  letter-spacing:.3em;color:#C084FC;text-transform:uppercase}
-
-.ov-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;
-  font-size:clamp(2.8rem,10vw,6.5rem);line-height:1;
-  background:linear-gradient(135deg,#FF3C6E,#FFD166,#C084FC);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  filter:drop-shadow(0 0 30px rgba(255,60,110,.6))}
-
-.ov-sub{font-family:'Cormorant Garamond',serif;font-style:italic;
-  color:rgba(255,245,248,.65);font-size:clamp(.95rem,3vw,1.3rem);
-  max-width:380px;line-height:1.6}
-
-.ov-hint{font-family:'Orbitron',monospace;font-size:clamp(9px,1.8vw,11px);
-  color:rgba(192,132,252,.6);letter-spacing:.15em;text-transform:uppercase;margin-top:4px}
-
-.btn{font-family:'Orbitron',monospace;font-size:clamp(10px,2vw,13px);
-  letter-spacing:.2em;text-transform:uppercase;padding:14px 40px;
-  border:none;border-radius:50px;cursor:pointer;
-  background:linear-gradient(135deg,#FF3C6E,#AA0044);color:#fff;
-  box-shadow:0 0 40px rgba(255,60,110,.5);
-  transition:transform .2s,box-shadow .2s}
-.btn:hover{transform:scale(1.06);box-shadow:0 0 60px rgba(255,60,110,.8)}
-
-/* ── HUD ── */
-#hud{position:absolute;top:0;left:0;right:0;padding:10px 16px;
-  display:flex;justify-content:space-between;align-items:center;
-  pointer-events:none;z-index:10}
-.hud-letters{display:flex;gap:8px}
-.hud-l{width:clamp(30px,7vw,44px);height:clamp(30px,7vw,44px);
-  border-radius:50%;border:2px solid rgba(192,132,252,.35);
-  background:rgba(45,0,80,.6);display:flex;align-items:center;justify-content:center;
-  font-family:'Orbitron',monospace;font-weight:700;
-  font-size:clamp(.75rem,2.5vw,1.1rem);color:rgba(192,132,252,.4);
-  transition:all .4s;box-shadow:0 0 10px rgba(192,132,252,.1)}
-.hud-l.got{color:#FFD166;border-color:#FFD166;
-  box-shadow:0 0 20px rgba(255,209,102,.6);
-  background:rgba(80,40,0,.6);animation:hudPop .4s ease}
-@keyframes hudPop{0%{transform:scale(1.6)}100%{transform:scale(1)}}
-
-.hud-lives{display:flex;gap:5px;align-items:center}
-.hud-life{font-size:clamp(1rem,3vw,1.4rem);transition:transform .2s,opacity .2s}
-.hud-life.lost{opacity:.2;transform:scale(.7)}
-
-#score-box{font-family:'Orbitron',monospace;font-size:clamp(10px,2vw,13px);
-  color:#C084FC;letter-spacing:.1em}
-
-/* ── MOBILE CONTROLS ── */
-#mob-ctrl{position:absolute;bottom:0;left:0;right:0;
-  display:flex;justify-content:space-between;align-items:flex-end;
-  padding:12px 20px 20px;z-index:10;pointer-events:none}
-.mob-btn{width:clamp(56px,15vw,72px);height:clamp(56px,15vw,72px);
-  border-radius:50%;border:2px solid rgba(255,60,110,.4);
-  background:rgba(255,60,110,.12);backdrop-filter:blur(4px);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.5rem;cursor:pointer;pointer-events:all;
-  user-select:none;-webkit-user-select:none;
-  transition:background .15s,transform .1s;-webkit-tap-highlight-color:transparent}
-.mob-btn:active{background:rgba(255,60,110,.35);transform:scale(.9)}
-#mob-fire{width:clamp(68px,18vw,88px);height:clamp(68px,18vw,88px);
-  background:rgba(255,60,110,.2);border-color:rgba(255,60,110,.7);font-size:2rem}
-
-/* ── WIN OVERLAY extra ── */
-#big-name{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;
-  font-size:clamp(5rem,22vw,11rem);line-height:1;
-  background:linear-gradient(135deg,#FF3C6E,#FFD166,#C084FC);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  filter:drop-shadow(0 0 50px rgba(255,60,110,.7));
-  animation:bigNameGlow 2s ease-in-out infinite alternate}
-@keyframes bigNameGlow{
-  from{filter:drop-shadow(0 0 30px rgba(255,60,110,.5)) drop-shadow(0 0 60px rgba(255,209,102,.3))}
-  to  {filter:drop-shadow(0 0 70px rgba(255,60,110,.9)) drop-shadow(0 0 130px rgba(255,209,102,.6))}
+/* ══════════════════════════════════════
+   TOKENS
+══════════════════════════════════════ */
+:root {
+  --ink:     #0E0010;
+  --deep:    #160020;
+  --violet:  #3B0060;
+  --rose:    #E8205A;
+  --blush:   #FF6B9D;
+  --gold:    #F5C842;
+  --cream:   #FFF8F0;
+  --mist:    rgba(255,248,240,.12);
+  --glow-r:  rgba(232,32,90,.6);
+  --glow-g:  rgba(245,200,66,.5);
+  --glow-v:  rgba(192,132,252,.4);
+  --card-w:  clamp(88px, 20vw, 130px);
+  --card-h:  clamp(120px, 27vw, 178px);
 }
-.win-msg{font-family:'Cormorant Garamond',serif;font-style:italic;
-  color:rgba(255,245,248,.8);font-size:clamp(1rem,3.5vw,1.5rem);
-  max-width:420px;line-height:1.65}
 
-@media(min-width:600px){}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width:100%; height:100%; overflow:hidden; background:var(--ink); }
+body { font-family:'DM Sans', sans-serif; color:var(--cream); touch-action:none; }
+
+/* ══════════════════════════════════════
+   CANVAS BG
+══════════════════════════════════════ */
+#bg { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+/* ══════════════════════════════════════
+   PETALS
+══════════════════════════════════════ */
+.petal {
+  position:fixed; pointer-events:none; z-index:1;
+  font-size:clamp(14px,3vw,22px);
+  animation: petalFall linear infinite;
+  opacity:0;
+}
+@keyframes petalFall {
+  0%   { opacity:0; transform:translateY(-40px) rotate(0deg) scale(1); }
+  8%   { opacity:.7; }
+  90%  { opacity:.3; }
+  100% { opacity:0; transform:translateY(110vh) rotate(720deg) scale(.4); }
+}
+
+/* ══════════════════════════════════════
+   SCREENS
+══════════════════════════════════════ */
+.screen {
+  position:fixed; inset:0; z-index:10;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:20px; text-align:center;
+  opacity:0; pointer-events:none;
+  transition:opacity .6s ease;
+}
+.screen.on { opacity:1; pointer-events:all; }
+
+/* ══════════════════════════════════════
+   INTRO SCREEN
+══════════════════════════════════════ */
+#s-intro { gap:20px; }
+
+.intro-eye {
+  font-family:'DM Sans',sans-serif; font-weight:300;
+  font-size:clamp(9px,2vw,12px); letter-spacing:.4em;
+  text-transform:uppercase; color:rgba(245,200,66,.7);
+}
+.intro-title {
+  font-family:'Pinyon Script', cursive;
+  font-size:clamp(3.5rem,14vw,8rem); line-height:1;
+  background:linear-gradient(135deg,var(--blush),var(--gold),#fff);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+  filter:drop-shadow(0 0 40px var(--glow-r));
+  animation:titleFloat 4s ease-in-out infinite alternate;
+}
+@keyframes titleFloat {
+  from { filter:drop-shadow(0 0 30px var(--glow-r)); transform:translateY(0); }
+  to   { filter:drop-shadow(0 0 60px var(--glow-r)) drop-shadow(0 0 80px var(--glow-g)); transform:translateY(-8px); }
+}
+.intro-sub {
+  font-family:'Playfair Display',serif; font-style:italic;
+  font-size:clamp(.95rem,3vw,1.3rem); color:rgba(255,248,240,.6);
+  max-width:340px; line-height:1.7;
+}
+.intro-rules {
+  background:rgba(59,0,96,.4); border:1px solid rgba(192,132,252,.2);
+  border-radius:16px; padding:16px 24px; max-width:340px; width:100%;
+  display:flex; flex-direction:column; gap:8px;
+}
+.rule {
+  display:flex; align-items:center; gap:10px;
+  font-size:clamp(.8rem,2.5vw,.95rem); color:rgba(255,248,240,.75);
+  text-align:left;
+}
+.rule-icon { font-size:1.2rem; flex-shrink:0; }
+
+/* ══════════════════════════════════════
+   GAME SCREEN
+══════════════════════════════════════ */
+#s-game {
+  gap:0; justify-content:flex-start;
+  padding-top:0; overflow-y:auto;
+}
+
+/* HUD */
+#hud {
+  width:100%; max-width:640px;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:12px 16px 8px; flex-shrink:0; position:relative; z-index:5;
+}
+.hud-stat {
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+}
+.hud-label {
+  font-size:clamp(7px,1.5vw,9px); letter-spacing:.25em;
+  text-transform:uppercase; color:rgba(245,200,66,.6);
+  font-family:'DM Sans',sans-serif;
+}
+.hud-val {
+  font-family:'Playfair Display',serif; font-size:clamp(1.2rem,4vw,1.8rem);
+  color:var(--gold); line-height:1;
+  text-shadow:0 0 20px var(--glow-g);
+}
+#progress-wrap {
+  flex:1; margin:0 14px;
+  height:4px; background:rgba(255,255,255,.08); border-radius:4px;
+  overflow:hidden;
+}
+#progress-bar {
+  height:100%; width:0%;
+  background:linear-gradient(90deg,var(--rose),var(--gold));
+  border-radius:4px; transition:width .5s ease;
+}
+
+/* GRID */
+#grid-wrap {
+  flex:1; width:100%; display:flex;
+  align-items:center; justify-content:center;
+  padding:8px 10px 16px;
+}
+#grid {
+  display:grid;
+  grid-template-columns:repeat(4, var(--card-w));
+  gap:clamp(8px,2vw,14px);
+}
+@media(max-width:420px){
+  #grid { grid-template-columns:repeat(4, 1fr); --card-w:1fr; width:100%; }
+}
+
+/* ══════════════════════════════════════
+   CARDS
+══════════════════════════════════════ */
+.card {
+  width:var(--card-w); height:var(--card-h);
+  perspective:900px; cursor:pointer;
+  position:relative;
+}
+@media(max-width:420px){
+  .card { width:100%; height:0; padding-bottom:136%; }
+}
+.card-inner {
+  position:absolute; inset:0;
+  transform-style:preserve-3d;
+  transition:transform .55s cubic-bezier(.4,0,.2,1);
+  transform-origin:center center;
+}
+.card.flipped .card-inner  { transform:rotateY(180deg); }
+.card.matched .card-inner  { transform:rotateY(180deg); }
+
+.card-face {
+  position:absolute; inset:0;
+  border-radius:16px;
+  backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
+}
+
+/* BACK */
+.card-back {
+  background:linear-gradient(145deg,#2A0045,#1A0030);
+  border:1.5px solid rgba(192,132,252,.3);
+  box-shadow:0 4px 24px rgba(0,0,0,.5), inset 0 0 30px rgba(59,0,96,.5);
+  transition:box-shadow .3s, border-color .3s;
+}
+.card:hover .card-back {
+  box-shadow:0 4px 36px rgba(232,32,90,.3), inset 0 0 30px rgba(232,32,90,.1);
+  border-color:rgba(232,32,90,.4);
+}
+.card-back-pattern {
+  position:absolute; inset:0; display:flex;
+  align-items:center; justify-content:center;
+  font-size:2rem; opacity:.25;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(232,32,90,.15) 0%, transparent 50%),
+    radial-gradient(circle at 70% 70%, rgba(245,200,66,.1) 0%, transparent 50%);
+}
+.card-back-icon {
+  font-size:2.2rem; opacity:.5;
+  animation:backPulse 3s ease-in-out infinite;
+}
+@keyframes backPulse {
+  0%,100% { transform:scale(1); opacity:.4; }
+  50%      { transform:scale(1.1); opacity:.65; }
+}
+
+/* FRONT */
+.card-front {
+  transform:rotateY(180deg);
+  flex-direction:column; gap:6px; padding:10px 8px;
+}
+.card-emoji {
+  font-size:clamp(1.8rem,5vw,2.6rem);
+  filter:drop-shadow(0 0 12px rgba(255,255,255,.3));
+  animation:emojiFloat 2.5s ease-in-out infinite alternate;
+}
+@keyframes emojiFloat {
+  from { transform:translateY(0) scale(1); }
+  to   { transform:translateY(-5px) scale(1.07); }
+}
+.card-word {
+  font-family:'Playfair Display',serif; font-style:italic;
+  font-size:clamp(.8rem,2.2vw,1rem); font-weight:700;
+  letter-spacing:.03em; line-height:1.1;
+  text-shadow:0 0 16px rgba(255,255,255,.4);
+}
+.card-tagline {
+  font-size:clamp(6px,1.5vw,9px); letter-spacing:.08em;
+  color:rgba(255,255,255,.65); line-height:1.3;
+  font-weight:300; text-align:center;
+  padding:0 4px;
+}
+
+.card.matched .card-front {
+  animation:matchGlow .5s ease forwards;
+}
+@keyframes matchGlow {
+  0%   { transform:rotateY(180deg) scale(1); }
+  40%  { transform:rotateY(180deg) scale(1.12); }
+  100% { transform:rotateY(180deg) scale(1); }
+}
+
+/* Unique card themes */
+.card-theme-rose   .card-front { background:linear-gradient(145deg,#6B0025,#2D0010); border:1.5px solid rgba(232,32,90,.5); box-shadow:0 0 30px rgba(232,32,90,.2); }
+.card-theme-gold   .card-front { background:linear-gradient(145deg,#5A3A00,#2A1A00); border:1.5px solid rgba(245,200,66,.5); box-shadow:0 0 30px rgba(245,200,66,.2); }
+.card-theme-violet .card-front { background:linear-gradient(145deg,#3B0060,#1A0030); border:1.5px solid rgba(192,132,252,.5); box-shadow:0 0 30px rgba(192,132,252,.2); }
+.card-theme-teal   .card-front { background:linear-gradient(145deg,#003A40,#001A20); border:1.5px solid rgba(80,220,200,.5); box-shadow:0 0 30px rgba(80,220,200,.15); }
+.card-theme-blush  .card-front { background:linear-gradient(145deg,#5A1030,#2A0818); border:1.5px solid rgba(255,107,157,.5); box-shadow:0 0 30px rgba(255,107,157,.2); }
+.card-theme-sky    .card-front { background:linear-gradient(145deg,#001050,#000828); border:1.5px solid rgba(100,160,255,.5); box-shadow:0 0 30px rgba(100,160,255,.2); }
+
+/* ══════════════════════════════════════
+   MESSAGE POPUP
+══════════════════════════════════════ */
+#popup-wrap {
+  position:fixed; inset:0; z-index:40;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(6,0,15,.75); backdrop-filter:blur(8px);
+  opacity:0; pointer-events:none;
+  transition:opacity .4s;
+}
+#popup-wrap.show { opacity:1; pointer-events:all; }
+
+#popup {
+  background:linear-gradient(145deg,#2A0040,#150020);
+  border:1px solid rgba(192,132,252,.35);
+  border-radius:24px; padding:32px 28px;
+  max-width:min(360px,88vw);
+  width:100%; text-align:center; gap:16px;
+  display:flex; flex-direction:column;
+  box-shadow:0 12px 60px rgba(232,32,90,.2), 0 0 0 1px rgba(192,132,252,.1);
+  transform:scale(.85); transition:transform .4s;
+  position:relative; overflow:hidden;
+}
+#popup-wrap.show #popup { transform:scale(1); }
+#popup::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse at 50% 0%, rgba(232,32,90,.12) 0%, transparent 60%);
+  pointer-events:none;
+}
+.pop-pair-emoji { font-size:3rem; line-height:1; filter:drop-shadow(0 0 20px rgba(255,255,255,.3)); }
+.pop-title {
+  font-family:'Playfair Display',serif; font-style:italic;
+  font-size:clamp(1.4rem,5vw,1.9rem); font-weight:700;
+  background:linear-gradient(135deg,var(--blush),var(--gold));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.pop-msg {
+  font-family:'Playfair Display',serif; font-style:italic;
+  font-size:clamp(.95rem,3vw,1.1rem); color:rgba(255,248,240,.82);
+  line-height:1.7;
+}
+.pop-close {
+  font-family:'DM Sans',sans-serif; font-size:clamp(9px,2vw,11px);
+  letter-spacing:.25em; text-transform:uppercase;
+  padding:11px 28px; border:none; border-radius:50px; cursor:pointer;
+  background:linear-gradient(135deg,var(--rose),#9B0030);
+  color:#fff; box-shadow:0 0 30px var(--glow-r);
+  transition:transform .2s, box-shadow .2s; align-self:center;
+}
+.pop-close:hover { transform:scale(1.05); box-shadow:0 0 50px var(--glow-r); }
+.pop-count {
+  font-size:clamp(8px,1.8vw,10px); letter-spacing:.2em;
+  text-transform:uppercase; color:rgba(245,200,66,.5);
+}
+
+/* ══════════════════════════════════════
+   WIN SCREEN
+══════════════════════════════════════ */
+#s-win { gap:18px; background:radial-gradient(ellipse at 50% 30%,rgba(80,0,80,.6),rgba(6,0,15,.98)); }
+
+.win-eye {
+  font-size:clamp(9px,2vw,11px); letter-spacing:.4em;
+  text-transform:uppercase; color:rgba(245,200,66,.7);
+  font-family:'DM Sans',sans-serif;
+}
+.win-name {
+  font-family:'Pinyon Script',cursive;
+  font-size:clamp(4.5rem,18vw,9rem); line-height:1;
+  background:linear-gradient(135deg,#FF6B9D,#F5C842,#C084FC,#FF6B9D);
+  background-size:300% 300%;
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+  filter:drop-shadow(0 0 50px rgba(232,32,90,.8));
+  animation:nameShimmer 3s linear infinite, namePop .8s cubic-bezier(.2,1.4,.4,1) forwards;
+}
+@keyframes nameShimmer { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
+@keyframes namePop { 0%{transform:scale(0) rotate(-10deg);opacity:0} 100%{transform:scale(1) rotate(0);opacity:1} }
+
+.win-letter-row {
+  display:flex; gap:10px; justify-content:center; flex-wrap:wrap;
+}
+.win-letter {
+  width:clamp(36px,9vw,52px); height:clamp(36px,9vw,52px);
+  border-radius:50%; border:2px solid var(--gold);
+  background:rgba(245,200,66,.12);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Playfair Display',serif; font-weight:700;
+  font-size:clamp(.9rem,2.8vw,1.3rem); color:var(--gold);
+  box-shadow:0 0 20px var(--glow-g);
+  opacity:0; transform:scale(0);
+  animation:letterIn .4s cubic-bezier(.2,1.4,.4,1) forwards;
+}
+.win-letter:nth-child(1){animation-delay:.1s}
+.win-letter:nth-child(2){animation-delay:.22s}
+.win-letter:nth-child(3){animation-delay:.34s}
+.win-letter:nth-child(4){animation-delay:.46s}
+.win-letter:nth-child(5){animation-delay:.58s}
+.win-letter:nth-child(6){animation-delay:.70s}
+@keyframes letterIn { to{opacity:1;transform:scale(1)} }
+
+.win-quote {
+  font-family:'Playfair Display',serif; font-style:italic;
+  font-size:clamp(.95rem,3vw,1.25rem); color:rgba(255,248,240,.75);
+  max-width:380px; line-height:1.75;
+  border-left:2px solid var(--rose); padding-left:16px; text-align:left;
+}
+.win-score-line {
+  font-family:'DM Sans',sans-serif; font-weight:300;
+  font-size:clamp(.75rem,2.2vw,.9rem); letter-spacing:.1em;
+  color:rgba(255,248,240,.45);
+}
+
+/* ══════════════════════════════════════
+   BUTTONS
+══════════════════════════════════════ */
+.btn {
+  font-family:'DM Sans',sans-serif; font-weight:500;
+  font-size:clamp(10px,2.2vw,12px); letter-spacing:.22em;
+  text-transform:uppercase; padding:13px 36px;
+  border:none; border-radius:50px; cursor:pointer;
+  background:linear-gradient(135deg,var(--rose),#9B0030);
+  color:#fff; box-shadow:0 0 35px var(--glow-r);
+  transition:transform .2s, box-shadow .2s; position:relative; overflow:hidden;
+}
+.btn::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg,transparent,rgba(255,255,255,.15),transparent);
+  transform:translateX(-100%); transition:transform .4s;
+}
+.btn:hover { transform:translateY(-2px) scale(1.04); box-shadow:0 0 55px var(--glow-r); }
+.btn:hover::after { transform:translateX(100%); }
+
+/* ══════════════════════════════════════
+   PARTICLES
+══════════════════════════════════════ */
+.spark {
+  position:fixed; pointer-events:none; z-index:50;
+  border-radius:50%; animation:sparkFly .9s ease-out forwards;
+}
+@keyframes sparkFly {
+  0%   { opacity:1; transform:translate(0,0) scale(1); }
+  100% { opacity:0; transform:translate(var(--tx),var(--ty)) scale(0); }
+}
 </style>
 </head>
 <body>
-<div id="wrap">
-  <canvas id="c"></canvas>
+<canvas id="bg"></canvas>
 
-  <!-- HUD -->
+<!-- INTRO -->
+<div class="screen on" id="s-intro">
+  <p class="intro-eye">A game made just for you</p>
+  <div class="intro-title">Favour</div>
+  <p class="intro-sub">Twelve cards. Six hidden truths. Each match reveals something only the right person deserves to hear.</p>
+  <div class="intro-rules">
+    <div class="rule"><span class="rule-icon">🃏</span><span>Flip two cards — find the matching pair</span></div>
+    <div class="rule"><span class="rule-icon">💌</span><span>Every match unlocks a message about you</span></div>
+    <div class="rule"><span class="rule-icon">✨</span><span>Match all 6 pairs to see your name revealed</span></div>
+  </div>
+  <button class="btn" id="btn-start">Open Your Gift 🎁</button>
+</div>
+
+<!-- GAME -->
+<div class="screen" id="s-game">
   <div id="hud">
-    <div class="hud-letters" id="hud-letters"></div>
-    <div id="score-box">SCORE <span id="score-val">0</span></div>
-    <div class="hud-lives" id="hud-lives"></div>
+    <div class="hud-stat">
+      <span class="hud-label">Pairs</span>
+      <span class="hud-val" id="pairs-val">0/6</span>
+    </div>
+    <div id="progress-wrap"><div id="progress-bar"></div></div>
+    <div class="hud-stat">
+      <span class="hud-label">Moves</span>
+      <span class="hud-val" id="moves-val">0</span>
+    </div>
   </div>
+  <div id="grid-wrap"><div id="grid"></div></div>
+</div>
 
-
-
-  <!-- INTRO -->
-  <div class="ov" id="ov-intro">
-    <p class="ov-eye">A message encrypted in the stars</p>
-    <div class="ov-title">Shoot<br>Your Shot</div>
-    <p class="ov-sub">Six letters are hidden in falling hearts & roses. Shoot them all to reveal her name.</p>
-    <p class="ov-hint">← → to move &nbsp;|&nbsp; SPACE to shoot &nbsp;|&nbsp; 📱 Drag to move · Tap ship to shoot</p>
-    <button class="btn" id="btn-start">Let's Go 💘</button>
-  </div>
-
-  <!-- GAME OVER -->
-  <div class="ov hide" id="ov-dead">
-    <p class="ov-eye">So close…</p>
-    <div class="ov-title" style="font-size:clamp(2rem,8vw,4rem)">Game<br>Over</div>
-    <p class="ov-sub" id="dead-msg">You didn't get all her letters this time.</p>
-    <button class="btn" id="btn-retry">Try Again 💪</button>
-  </div>
-
-  <!-- WIN -->
-  <div class="ov hide" id="ov-win">
-    <p class="ov-eye">You did it — her name is</p>
-    <div id="big-name">Favour</div>
-    <p class="win-msg">"She is not just a name. She is the warmth you feel when you finally stop running and just stay."</p>
-    <button class="btn" id="btn-play-again">Play Again 🌸</button>
+<!-- POPUP -->
+<div id="popup-wrap">
+  <div id="popup">
+    <div class="pop-pair-emoji" id="pop-emoji"></div>
+    <div class="pop-title" id="pop-title"></div>
+    <p class="pop-msg" id="pop-msg"></p>
+    <p class="pop-count" id="pop-count"></p>
+    <button class="pop-close" id="pop-close">Keep Going 💫</button>
   </div>
 </div>
 
+<!-- WIN -->
+<div class="screen" id="s-win">
+  <p class="win-eye">You found every piece of her</p>
+  <div class="win-name">Favour</div>
+  <div class="win-letter-row">
+    <div class="win-letter">F</div>
+    <div class="win-letter">A</div>
+    <div class="win-letter">V</div>
+    <div class="win-letter">O</div>
+    <div class="win-letter">U</div>
+    <div class="win-letter">R</div>
+  </div>
+  <blockquote class="win-quote">"You are the kind of rare that people write songs about, paint late at night, and never quite stop thinking about."</blockquote>
+  <p class="win-score-line" id="win-score-line"></p>
+  <button class="btn" id="btn-replay">Play Again 🌹</button>
+</div>
+
 <script>
-// ═══════════════════════════════════════════════════════════
-//  CONSTANTS & STATE
-// ═══════════════════════════════════════════════════════════
-const LETTERS = ['F','A','V','O','U','R'];
-const EMOJIS  = ['💖','🌸','💕','✨','🌹','💫','⭐','🔥'];
-const LETTER_COLORS = ['#FF3C6E','#FF8FAB','#FFD166','#C084FC','#FF3C6E','#FFD166'];
-
-const canvas = document.getElementById('c');
-const ctx    = canvas.getContext('2d');
-
-let W, H, raf, gameState = 'idle'; // idle | playing | dead | win
-let score = 0;
-let lives = 3;
-let collectedLetters = [];
-let objects = [];
-let bullets  = [];
-let particles = [];
-let stars    = [];
-let player   = { x:0, y:0, w:50, h:40, vx:0, touchTargetX: null };
-let keys     = {};
-let spawnTimer = 0;
-let spawnInterval = 120;
-let frameCount = 0;
-let shootCooldown = 0;
-let shakeFrames  = 0;
-let shootRipple  = 0; // frames of shoot flash on ship
-
-// ═══════════════════════════════════════════════════════════
-//  RESIZE
-// ═══════════════════════════════════════════════════════════
-function resize(){
-  const wrap = document.getElementById('wrap');
-  W = canvas.width  = wrap.clientWidth;
-  H = canvas.height = wrap.clientHeight;
-  player.x = W/2;
-  player.y = H - 80;
-  player.w = Math.min(54, W*0.1);
-  player.h = player.w * 0.8;
-}
-window.addEventListener('resize', resize);
-
-// ═══════════════════════════════════════════════════════════
-//  STARS
-// ═══════════════════════════════════════════════════════════
-function initStars(){
-  stars = Array.from({length:200}, ()=>({
-    x: Math.random()*W, y: Math.random()*H,
-    r: Math.random()*1.3+.2,
-    a: Math.random(), ds: (Math.random()-.5)*.007
-  }));
-}
-
-function drawStars(){
-  for(const s of stars){
-    s.a += s.ds;
-    if(s.a<0||s.a>1) s.ds*=-1;
-    ctx.globalAlpha = s.a*.7;
-    ctx.fillStyle='#D8AAFF';
-    ctx.beginPath();
-    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-    ctx.fill();
+// ══════════════════════════════════════
+//  CANVAS STARFIELD
+// ══════════════════════════════════════
+(function(){
+  const c=document.getElementById('bg');
+  const ctx=c.getContext('2d');
+  let W,H,pts=[];
+  function resize(){
+    W=c.width=window.innerWidth; H=c.height=window.innerHeight;
+    pts=Array.from({length:260},()=>({
+      x:Math.random()*W, y:Math.random()*H,
+      r:Math.random()*1.5+.2, a:Math.random(),
+      ds:(Math.random()-.5)*.006, hue:Math.random()>0.7?'255,180,240':'200,160,255'
+    }));
   }
-  ctx.globalAlpha=1;
-}
-
-// ═══════════════════════════════════════════════════════════
-//  SPAWN
-// ═══════════════════════════════════════════════════════════
-function spawnObject(){
-  const needLetters = LETTERS.filter((_,i)=>!collectedLetters.includes(i));
-  // 40% chance to spawn a letter target, else decoration
-  const isLetter = needLetters.length > 0 && Math.random()<.38;
-
-  if(isLetter){
-    const idx = LETTERS.indexOf(needLetters[Math.floor(Math.random()*needLetters.length)]);
-    objects.push({
-      x: 60+Math.random()*(W-120), y:-40,
-      vy: 1.2+Math.random()*1.4 + frameCount/6000,
-      vx: (Math.random()-.5)*.8,
-      type:'letter', letterIdx: idx,
-      letter: LETTERS[idx],
-      color: LETTER_COLORS[idx],
-      r: Math.min(26,W*.055),
-      rot:0, rotV:(Math.random()-.5)*.04,
-      pulse:0, hit:false
-    });
-  } else {
-    // decoration hearts — shoot for points
-    objects.push({
-      x: 60+Math.random()*(W-120), y:-40,
-      vy: 1.5+Math.random()*2 + frameCount/5000,
-      vx: (Math.random()-.5)*.6,
-      type:'deco',
-      emoji: EMOJIS[Math.floor(Math.random()*EMOJIS.length)],
-      r: Math.min(20,W*.04),
-      rot:0, rotV:(Math.random()-.5)*.06,
-      points: 10,
-      hit:false
-    });
-  }
-}
-
-// ═══════════════════════════════════════════════════════════
-//  PARTICLES
-// ═══════════════════════════════════════════════════════════
-function explode(x,y,color,big){
-  const n = big ? 18 : 10;
-  for(let i=0;i<n;i++){
-    const ang = Math.random()*Math.PI*2;
-    const spd = big ? 3+Math.random()*5 : 2+Math.random()*3;
-    particles.push({
-      x,y,
-      vx:Math.cos(ang)*spd, vy:Math.sin(ang)*spd-1,
-      life:1, decay:.025+Math.random()*.02,
-      r:2+Math.random()*(big?5:3),
-      color: color || '#FF3C6E',
-      emoji: big && Math.random()>.5 ? EMOJIS[Math.floor(Math.random()*EMOJIS.length)] : null
-    });
-  }
-}
-
-function updateParticles(){
-  for(let i=particles.length-1;i>=0;i--){
-    const p=particles[i];
-    p.x+=p.vx; p.y+=p.vy; p.vy+=.12; p.life-=p.decay;
-    if(p.life<=0) particles.splice(i,1);
-  }
-}
-
-function drawParticles(){
-  for(const p of particles){
-    ctx.globalAlpha=p.life;
-    if(p.emoji){
-      ctx.font=`${14+p.r*2}px serif`;
-      ctx.fillText(p.emoji,p.x-10,p.y);
-    } else {
-      ctx.fillStyle=p.color;
-      ctx.beginPath();
-      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fill();
+  window.addEventListener('resize',resize); resize();
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // deep bg
+    const bg=ctx.createRadialGradient(W*.5,H*.25,0,W*.5,H*.5,Math.max(W,H)*.8);
+    bg.addColorStop(0,'#1E0032'); bg.addColorStop(.5,'#0E0018'); bg.addColorStop(1,'#06000C');
+    ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+    for(const p of pts){
+      p.a+=p.ds; if(p.a<0||p.a>1)p.ds*=-1;
+      ctx.globalAlpha=p.a*.75;
+      ctx.fillStyle=`rgba(${p.hue},1)`;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
     }
+    ctx.globalAlpha=1;
+    requestAnimationFrame(draw);
   }
-  ctx.globalAlpha=1;
-}
-
-// ═══════════════════════════════════════════════════════════
-//  DRAW PLAYER — love cannon / heart ship
-// ═══════════════════════════════════════════════════════════
-function drawPlayer(){
-  const {x,y,w,h} = player;
-  ctx.save();
-  ctx.translate(x,y);
-
-  // glow halo
-  const grd = ctx.createRadialGradient(0,0,w*.1,0,0,w*.9);
-  grd.addColorStop(0,'rgba(255,60,110,.35)');
-  grd.addColorStop(1,'rgba(255,60,110,0)');
-  ctx.fillStyle=grd;
-  ctx.beginPath();ctx.arc(0,0,w*.9,0,Math.PI*2);ctx.fill();
-
-  // body — heart-shaped ship
-  ctx.fillStyle='#FF3C6E';
-  ctx.shadowColor='#FF3C6E';ctx.shadowBlur=18;
-
-  // cannon barrel
-  ctx.fillRect(-5,-h*.55,10,h*.45);
-
-  // ship body (rounded diamond)
-  ctx.beginPath();
-  ctx.moveTo(0,-h*.25);
-  ctx.lineTo(w*.42,h*.3);
-  ctx.lineTo(0,h*.55);
-  ctx.lineTo(-w*.42,h*.3);
-  ctx.closePath();
-  ctx.fill();
-
-  // wing accents
-  ctx.fillStyle='#FFD166';ctx.shadowColor='#FFD166';ctx.shadowBlur=10;
-  ctx.beginPath();
-  ctx.moveTo(w*.2,0);ctx.lineTo(w*.55,h*.1);ctx.lineTo(w*.18,h*.2);
-  ctx.closePath();ctx.fill();
-  ctx.beginPath();
-  ctx.moveTo(-w*.2,0);ctx.lineTo(-w*.55,h*.1);ctx.lineTo(-w*.18,h*.2);
-  ctx.closePath();ctx.fill();
-
-  // cockpit
-  ctx.fillStyle='#fff';ctx.shadowColor='#fff';ctx.shadowBlur=8;
-  ctx.beginPath();ctx.arc(0,-h*.02,w*.14,0,Math.PI*2);ctx.fill();
-
-  // shoot ripple ring
-  if(shootRipple>0){
-    const prog = 1 - shootRipple/10;
-    ctx.strokeStyle=`rgba(255,209,102,${1-prog})`;
-    ctx.lineWidth=2;
-    ctx.beginPath();
-    ctx.arc(0,0, player.w*(0.8+prog*0.8),0,Math.PI*2);
-    ctx.stroke();
-  }
-
-  ctx.shadowBlur=0;
-  ctx.restore();
-}
-
-// ═══════════════════════════════════════════════════════════
-//  DRAW FALLING OBJECTS
-// ═══════════════════════════════════════════════════════════
-function drawObjects(){
-  for(const o of objects){
-    if(o.hit) continue;
-    ctx.save();
-    ctx.translate(o.x,o.y);
-    ctx.rotate(o.rot);
-
-    if(o.type==='letter'){
-      // glowing orb with letter
-      o.pulse=(o.pulse||0)+.06;
-      const glow = 1+Math.sin(o.pulse)*.2;
-      const grd=ctx.createRadialGradient(0,0,o.r*.1,0,0,o.r*glow*1.4);
-      grd.addColorStop(0,o.color+'cc');
-      grd.addColorStop(.5,o.color+'66');
-      grd.addColorStop(1,o.color+'00');
-      ctx.fillStyle=grd;
-      ctx.beginPath();ctx.arc(0,0,o.r*1.6,0,Math.PI*2);ctx.fill();
-
-      // circle
-      ctx.beginPath();ctx.arc(0,0,o.r,0,Math.PI*2);
-      const cg=ctx.createRadialGradient(-o.r*.3,-o.r*.3,0,0,0,o.r);
-      cg.addColorStop(0,'#fff');
-      cg.addColorStop(.35,o.color);
-      cg.addColorStop(1,'#2D0050');
-      ctx.fillStyle=cg;
-      ctx.shadowColor=o.color;ctx.shadowBlur=20;
-      ctx.fill();
-
-      // ring
-      ctx.strokeStyle=o.color+'aa';ctx.lineWidth=2;
-      ctx.beginPath();ctx.arc(0,0,o.r+5+Math.sin(o.pulse)*3,0,Math.PI*2);ctx.stroke();
-
-      // letter
-      ctx.fillStyle='#fff';ctx.shadowColor='#fff';ctx.shadowBlur=6;
-      ctx.font=`bold ${o.r}px 'Orbitron',monospace`;
-      ctx.textAlign='center';ctx.textBaseline='middle';
-      ctx.fillText(o.letter,0,1);
-    } else {
-      // emoji decoration
-      ctx.font=`${o.r*2}px serif`;
-      ctx.textAlign='center';ctx.textBaseline='middle';
-      ctx.globalAlpha=.92;
-      ctx.fillText(o.emoji,0,0);
-    }
-
-    ctx.shadowBlur=0;ctx.globalAlpha=1;
-    ctx.restore();
-    o.rot+=o.rotV;
-  }
-}
-
-// ═══════════════════════════════════════════════════════════
-//  BULLETS
-// ═══════════════════════════════════════════════════════════
-function shoot(){
-  if(shootCooldown>0) return;
-  bullets.push({x:player.x, y:player.y-player.h*.5, vy:-12, r:5, life:1});
-  shootCooldown=14;
-  shootRipple=10;
-}
-
-function drawBullets(){
-  for(const b of bullets){
-    const grd=ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,b.r*3);
-    grd.addColorStop(0,'#fff');
-    grd.addColorStop(.4,'#FF3C6E');
-    grd.addColorStop(1,'rgba(255,60,110,0)');
-    ctx.fillStyle=grd;
-    ctx.beginPath();ctx.arc(b.x,b.y,b.r*3,0,Math.PI*2);ctx.fill();
-
-    ctx.fillStyle='#fff';
-    ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.fill();
-  }
-}
-
-// ═══════════════════════════════════════════════════════════
-//  GROUND LINE
-// ═══════════════════════════════════════════════════════════
-function drawGround(){
-  const grd=ctx.createLinearGradient(0,H-60,0,H);
-  grd.addColorStop(0,'rgba(255,60,110,.25)');
-  grd.addColorStop(1,'rgba(255,60,110,0)');
-  ctx.fillStyle=grd;
-  ctx.fillRect(0,H-60,W,60);
-
-  ctx.strokeStyle='rgba(255,60,110,.4)';ctx.lineWidth=1.5;
-  ctx.beginPath();ctx.moveTo(0,H-60);ctx.lineTo(W,H-60);ctx.stroke();
-}
-
-// ═══════════════════════════════════════════════════════════
-//  HUD
-// ═══════════════════════════════════════════════════════════
-function buildHUD(){
-  const ll=document.getElementById('hud-letters');
-  ll.innerHTML='';
-  LETTERS.forEach((l,i)=>{
-    const d=document.createElement('div');
-    d.className='hud-l'+(collectedLetters.includes(i)?' got':'');
-    d.id='hl'+i;d.textContent=l;
-    ll.appendChild(d);
-  });
-
-  const lv=document.getElementById('hud-lives');
-  lv.innerHTML='';
-  for(let i=0;i<3;i++){
-    const s=document.createElement('span');
-    s.className='hud-life'+(i>=lives?' lost':'');
-    s.textContent='💖';
-    lv.appendChild(s);
-  }
-}
-
-function updateHUD(){
-  document.getElementById('score-val').textContent=score;
-  LETTERS.forEach((_,i)=>{
-    const el=document.getElementById('hl'+i);
-    if(el) el.className='hud-l'+(collectedLetters.includes(i)?' got':'');
-  });
-  const lv=document.getElementById('hud-lives');
-  [...lv.children].forEach((s,i)=>{
-    s.className='hud-life'+(i>=lives?' lost':'');
-  });
-}
-
-// ═══════════════════════════════════════════════════════════
-//  COLLISION
-// ═══════════════════════════════════════════════════════════
-function collide(){
-  for(let bi=bullets.length-1;bi>=0;bi--){
-    const b=bullets[bi];
-    for(let oi=objects.length-1;oi>=0;oi--){
-      const o=objects[oi];
-      if(o.hit) continue;
-      const dx=b.x-o.x, dy=b.y-o.y;
-      if(Math.sqrt(dx*dx+dy*dy) < o.r+b.r*3){
-        // hit!
-        bullets.splice(bi,1);
-        o.hit=true;
-        if(o.type==='letter'){
-          if(!collectedLetters.includes(o.letterIdx)){
-            collectedLetters.push(o.letterIdx);
-            explode(o.x,o.y,o.color,true);
-            score+=100;
-            updateHUD();
-            if(collectedLetters.length===LETTERS.length){
-              setTimeout(()=>endGame('win'),600);
-            }
-          }
-        } else {
-          explode(o.x,o.y,'#FFD166',false);
-          score+=o.points;
-          updateHUD();
-        }
-        break;
-      }
-    }
-  }
-
-  // objects reaching bottom
-  for(let oi=objects.length-1;oi>=0;oi--){
-    const o=objects[oi];
-    if(o.hit) continue;
-    if(o.y > H+20){
-      if(o.type==='letter' && !collectedLetters.includes(o.letterIdx)){
-        // letter escaped → lose a life
-        lives--;
-        shakeFrames=18;
-        updateHUD();
-        if(lives<=0){ setTimeout(()=>endGame('dead'),400); }
-      }
-      objects.splice(oi,1);
-    }
-  }
-}
-
-// ═══════════════════════════════════════════════════════════
-//  GAME LOOP
-// ═══════════════════════════════════════════════════════════
-function loop(){
-  raf=requestAnimationFrame(loop);
-  if(gameState!=='playing') return;
-
-  frameCount++;
-  if(shootCooldown>0) shootCooldown--;
-  if(shootRipple>0)   shootRipple--;
-
-  // input — keyboard
-  const speed=4.5;
-  if(keys['ArrowLeft']||keys['a']||keys['A']) player.vx=-speed;
-  else if(keys['ArrowRight']||keys['d']||keys['D']) player.vx=speed;
-  else if(player.touchTargetX !== null){
-    // smooth lerp toward touch position
-    const diff = player.touchTargetX - player.x;
-    if(Math.abs(diff) < 2) { player.vx = 0; player.touchTargetX = null; }
-    else player.vx = diff * 0.22;
-  } else {
-    player.vx *= .75;
-  }
-
-  player.x+=player.vx;
-  player.x=Math.max(player.w*.6, Math.min(W-player.w*.6, player.x));
-
-  if(keys[' ']||keys['Space']) shoot();
-
-  // spawn
-  spawnTimer++;
-  spawnInterval = Math.max(45, 120 - Math.floor(frameCount/300)*5);
-  if(spawnTimer>=spawnInterval){ spawnTimer=0; spawnObject(); }
-
-  // update
-  for(let i=bullets.length-1;i>=0;i--){
-    bullets[i].y+=bullets[i].vy;
-    if(bullets[i].y<-20) bullets.splice(i,1);
-  }
-  for(let i=objects.length-1;i>=0;i--){
-    const o=objects[i];
-    if(o.hit){ objects.splice(i,1); continue; }
-    o.x+=o.vx; o.y+=o.vy;
-    if(o.x<o.r||o.x>W-o.r) o.vx*=-1;
-  }
-  updateParticles();
-  collide();
-
-  // draw
-  ctx.clearRect(0,0,W,H);
-
-  // shake
-  if(shakeFrames>0){
-    ctx.save();
-    ctx.translate((Math.random()-.5)*8,(Math.random()-.5)*6);
-    shakeFrames--;
-  }
-
-  // bg gradient
-  const bg=ctx.createRadialGradient(W*.5,H*.3,0,W*.5,H*.5,Math.max(W,H));
-  bg.addColorStop(0,'#1A0030');
-  bg.addColorStop(.5,'#0A0018');
-  bg.addColorStop(1,'#06000F');
-  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
-
-  drawStars();
-  drawGround();
-  drawObjects();
-  drawBullets();
-  drawParticles();
-  drawPlayer();
-
-  if(shakeFrames>=0 && shakeFrames<18) ctx.restore();
-}
-
-// ═══════════════════════════════════════════════════════════
-//  GAME CONTROL
-// ═══════════════════════════════════════════════════════════
-function startGame(){
-  score=0; lives=3; collectedLetters=[];
-  objects=[]; bullets=[]; particles=[];
-  frameCount=0; spawnTimer=0; spawnInterval=120; shootCooldown=0;
-  gameState='playing';
-  resize(); initStars(); buildHUD();
-  hide('ov-intro');hide('ov-dead');hide('ov-win');
-}
-
-function endGame(result){
-  gameState=result;
-  if(result==='win'){
-    show('ov-win');
-    // confetti burst
-    for(let i=0;i<40;i++){
-      setTimeout(()=>{
-        explode(Math.random()*W, Math.random()*H*.6, LETTER_COLORS[Math.floor(Math.random()*6)], true);
-      }, i*80);
-    }
-  } else {
-    const got=collectedLetters.map(i=>LETTERS[i]).join('');
-    document.getElementById('dead-msg').textContent=
-      got.length>0
-        ? `You found "${got}" — so close! She's worth another try. 💕`
-        : `Not one letter today… but she believes in you. 💕`;
-    show('ov-dead');
-  }
-}
-
-function show(id){ document.getElementById(id).classList.remove('hide'); }
-function hide(id){ document.getElementById(id).classList.add('hide'); }
-
-// ═══════════════════════════════════════════════════════════
-//  INPUT
-// ═══════════════════════════════════════════════════════════
-window.addEventListener('keydown', e=>{ keys[e.key]=true; if(e.key===' ') e.preventDefault(); });
-window.addEventListener('keyup',   e=>{ keys[e.key]=false; });
-
-// ── TOUCH CONTROLS ──────────────────────────────────────────
-// Drag anywhere  → ship smoothly follows finger X
-// Tap the ship   → shoot
-// (tap elsewhere → just moves, no accidental shoot)
-
-let touchStartX = 0, touchStartY = 0;
-let touchMoved  = false;
-const TAP_THRESHOLD = 10; // px — less than this = tap not drag
-
-canvas.addEventListener('touchstart', e => {
-  e.preventDefault();
-  if(gameState !== 'playing') return;
-  const t = e.touches[0];
-  touchStartX = t.clientX;
-  touchStartY = t.clientY;
-  touchMoved  = false;
-  player.touchTargetX = t.clientX;
-}, { passive: false });
-
-canvas.addEventListener('touchmove', e => {
-  e.preventDefault();
-  if(gameState !== 'playing') return;
-  const t = e.touches[0];
-  const dx = Math.abs(t.clientX - touchStartX);
-  const dy = Math.abs(t.clientY - touchStartY);
-  if(dx > TAP_THRESHOLD || dy > TAP_THRESHOLD) touchMoved = true;
-  // Follow finger
-  player.touchTargetX = t.clientX;
-}, { passive: false });
-
-canvas.addEventListener('touchend', e => {
-  e.preventDefault();
-  if(gameState !== 'playing') return;
-  if(!touchMoved){
-    // Tap = shoot
-    shoot();
-  }
-  player.touchTargetX = null;
-}, { passive: false });
-
-// Buttons
-document.getElementById('btn-start').onclick=startGame;
-document.getElementById('btn-retry').onclick=startGame;
-document.getElementById('btn-play-again').onclick=startGame;
-
-// ═══════════════════════════════════════════════════════════
-//  BOOT
-// ═══════════════════════════════════════════════════════════
-resize();
-initStars();
-// idle starfield on title screen
-(function idleLoop(){
-  if(gameState!=='idle'){ return; }
-  requestAnimationFrame(idleLoop);
-  ctx.clearRect(0,0,W,H);
-  const bg=ctx.createRadialGradient(W*.5,H*.3,0,W*.5,H*.5,Math.max(W,H));
-  bg.addColorStop(0,'#1A0030');bg.addColorStop(.5,'#0A0018');bg.addColorStop(1,'#06000F');
-  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
-  drawStars();
+  draw();
 })();
-raf=requestAnimationFrame(loop);
+
+// ══════════════════════════════════════
+//  FLOATING PETALS
+// ══════════════════════════════════════
+(function(){
+  const emojis=['🌸','🌹','💕','✨','🌺','💫','🍀','💖'];
+  setInterval(()=>{
+    const el=document.createElement('div');
+    el.className='petal';
+    el.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    el.style.left=Math.random()*100+'vw';
+    el.style.top='-40px';
+    el.style.fontSize=clamp(12,Math.random()*18+10,26)+'px';
+    el.style.animationDuration=(7+Math.random()*8)+'s';
+    el.style.animationDelay='0s';
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),16000);
+  },1400);
+  function clamp(min,v,max){return Math.min(max,Math.max(min,v));}
+})();
+
+// ══════════════════════════════════════
+//  CARD DATA — 6 pairs, each with a message
+// ══════════════════════════════════════
+const PAIRS = [
+  {
+    id:0, theme:'rose',
+    emoji:'🌹', word:'Rare',
+    tagline:'One in all of forever',
+    popEmoji:'🌹✨🌹',
+    popTitle:'She is Rare',
+    popMsg:'There are billions of people on this earth and not one of them is quite like you. Not even close. You are the kind of rare that makes people pause, look twice, and quietly think — wow.'
+  },
+  {
+    id:1, theme:'gold',
+    emoji:'✨', word:'Radiant',
+    tagline:'Lit from the inside',
+    popEmoji:'✨💛✨',
+    popTitle:'She is Radiant',
+    popMsg:'You don\'t just enter a room — you change it. There\'s a warmth that follows you everywhere, like the air itself gets softer when you\'re around.'
+  },
+  {
+    id:2, theme:'violet',
+    emoji:'🌙', word:'Mysterious',
+    tagline:'Deep beyond measure',
+    popEmoji:'🌙💜🌙',
+    popTitle:'She is Depth',
+    popMsg:'You are not someone people figure out quickly. And that\'s the gift. The more time you spend with her, the more there is to discover. An ocean pretending to be a person.'
+  },
+  {
+    id:3, theme:'teal',
+    emoji:'🌊', word:'Strong',
+    tagline:'Unbothered & unshakeable',
+    popEmoji:'🌊💙🌊',
+    popTitle:'She is Strong',
+    popMsg:'She has faced things quietly that would have broken most people loudly. She carries it with grace and keeps going — not because it was easy, but because she\'s built different.'
+  },
+  {
+    id:4, theme:'blush',
+    emoji:'💞', word:'Loving',
+    tagline:'The way she cares is art',
+    popEmoji:'💞🌸💞',
+    popTitle:'She is Love',
+    popMsg:'The way Favour loves is not small or careful or conditional. It\'s full. It\'s real. It shows up in the little things — a look, a laugh, the way she remembers what matters to you.'
+  },
+  {
+    id:5, theme:'sky',
+    emoji:'⭐', word:'Chosen',
+    tagline:'Destined to be adored',
+    popEmoji:'⭐💫⭐',
+    popTitle:'She is Chosen',
+    popMsg:'Out of every timeline, every possibility, every path — this one has her in it. That\'s not luck. That\'s the universe doing something on purpose. She was always meant to be someone\'s whole world.'
+  },
+];
+
+// ══════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════
+let deck=[], flipped=[], matched=[], moves=0, locked=false, pairsFound=0;
+let popQueue=[];
+
+// ══════════════════════════════════════
+//  BUILD DECK
+// ══════════════════════════════════════
+function buildDeck(){
+  // duplicate pairs and shuffle
+  deck = [...PAIRS,...PAIRS].map((p,i)=>({...p,uid:i}));
+  for(let i=deck.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [deck[i],deck[j]]=[deck[j],deck[i]];
+  }
+}
+
+// ══════════════════════════════════════
+//  RENDER GRID
+// ══════════════════════════════════════
+function renderGrid(){
+  const grid=document.getElementById('grid');
+  grid.innerHTML='';
+  deck.forEach((card,idx)=>{
+    const el=document.createElement('div');
+    el.className=`card card-theme-${card.theme}`;
+    el.dataset.idx=idx;
+    el.innerHTML=`
+      <div class="card-inner">
+        <div class="card-face card-back">
+          <div class="card-back-pattern"></div>
+          <span class="card-back-icon">🌹</span>
+        </div>
+        <div class="card-face card-front">
+          <div class="card-emoji">${card.emoji}</div>
+          <div class="card-word">${card.word}</div>
+          <div class="card-tagline">${card.tagline}</div>
+        </div>
+      </div>`;
+    el.addEventListener('click',()=>onCardClick(idx,el));
+    grid.appendChild(el);
+  });
+}
+
+// ══════════════════════════════════════
+//  CARD CLICK
+// ══════════════════════════════════════
+function onCardClick(idx,el){
+  if(locked) return;
+  if(el.classList.contains('flipped')||el.classList.contains('matched')) return;
+  if(flipped.length>=2) return;
+
+  el.classList.add('flipped');
+  flipped.push({idx,el,card:deck[idx]});
+  moves++;
+  document.getElementById('moves-val').textContent=moves;
+
+  if(flipped.length===2) checkMatch();
+}
+
+function checkMatch(){
+  locked=true;
+  const [a,b]=flipped;
+  if(a.card.id===b.card.id){
+    // MATCH
+    setTimeout(()=>{
+      a.el.classList.add('matched');
+      b.el.classList.add('matched');
+      burst(a.el); burst(b.el);
+      pairsFound++;
+      matched.push(a.card.id);
+      document.getElementById('pairs-val').textContent=pairsFound+'/6';
+      document.getElementById('progress-bar').style.width=(pairsFound/6*100)+'%';
+      flipped=[];
+      locked=false;
+      // queue popup
+      showPopup(a.card, pairsFound);
+    },400);
+  } else {
+    // NO MATCH
+    setTimeout(()=>{
+      a.el.classList.remove('flipped');
+      b.el.classList.remove('flipped');
+      flipped=[];
+      locked=false;
+    },900);
+  }
+}
+
+// ══════════════════════════════════════
+//  POPUP
+// ══════════════════════════════════════
+function showPopup(card, count){
+  document.getElementById('pop-emoji').textContent=card.popEmoji;
+  document.getElementById('pop-title').textContent=card.popTitle;
+  document.getElementById('pop-msg').textContent=card.popMsg;
+  document.getElementById('pop-count').textContent=`Match ${count} of 6 unlocked`;
+  document.getElementById('popup-wrap').classList.add('show');
+
+  document.getElementById('pop-close').onclick=()=>{
+    document.getElementById('popup-wrap').classList.remove('show');
+    if(count===6) setTimeout(()=>showWin(),600);
+  };
+}
+
+// ══════════════════════════════════════
+//  WIN
+// ══════════════════════════════════════
+function showWin(){
+  document.getElementById('win-score-line').textContent=`Completed in ${moves} moves 💖`;
+  goTo('s-win');
+  confetti();
+}
+
+function confetti(){
+  const colors=['#FF3C6E','#F5C842','#C084FC','#FF6B9D','#50DCC8'];
+  for(let i=0;i<60;i++){
+    setTimeout(()=>{
+      const sp=document.createElement('div');
+      sp.className='spark';
+      const x=Math.random()*window.innerWidth;
+      const y=Math.random()*window.innerHeight*.5;
+      sp.style.cssText=`left:${x}px;top:${y}px;width:${4+Math.random()*8}px;height:${4+Math.random()*8}px;
+        background:${colors[Math.floor(Math.random()*colors.length)]};
+        --tx:${(Math.random()-.5)*200}px;--ty:${(Math.random()-.5)*200}px;
+        animation-duration:${.8+Math.random()*.8}s`;
+      document.body.appendChild(sp);
+      setTimeout(()=>sp.remove(),1600);
+    },i*60);
+  }
+}
+
+// ══════════════════════════════════════
+//  BURST on MATCH
+// ══════════════════════════════════════
+function burst(el){
+  const rect=el.getBoundingClientRect();
+  const cx=rect.left+rect.width/2, cy=rect.top+rect.height/2;
+  const emojis=['💖','✨','🌸','💫'];
+  for(let i=0;i<8;i++){
+    const sp=document.createElement('div');
+    sp.className='spark';
+    const ang=(i/8)*Math.PI*2;
+    const dist=50+Math.random()*50;
+    sp.style.cssText=`left:${cx}px;top:${cy}px;
+      width:6px;height:6px;background:#F5C842;
+      --tx:${Math.cos(ang)*dist}px;--ty:${Math.sin(ang)*dist}px;
+      animation-duration:.7s`;
+    document.body.appendChild(sp);
+    // emoji sparks
+    const esp=document.createElement('div');
+    esp.style.cssText=`position:fixed;left:${cx}px;top:${cy}px;z-index:50;
+      font-size:1.1rem;pointer-events:none;
+      --tx:${Math.cos(ang+.4)*dist*1.3}px;--ty:${Math.sin(ang+.4)*dist*1.3}px;`;
+    esp.className='spark';
+    esp.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    esp.style.background='none';
+    document.body.appendChild(esp);
+    setTimeout(()=>{sp.remove();esp.remove();},900);
+  }
+}
+
+// ══════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
+
+function startGame(){
+  flipped=[]; matched=[]; moves=0; pairsFound=0; locked=false;
+  document.getElementById('pairs-val').textContent='0/6';
+  document.getElementById('moves-val').textContent='0';
+  document.getElementById('progress-bar').style.width='0%';
+  buildDeck(); renderGrid(); goTo('s-game');
+}
+
+document.getElementById('btn-start').onclick=startGame;
+document.getElementById('btn-replay').onclick=startGame;
 </script>
 </body>
 </html>
