@@ -3,762 +3,646 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Favour's Galaxy 🌟</title>
+<title>For Favour, Always 💖</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Orbitron:wght@700;900&family=Pinyon+Script&display=swap');
-:root{--rose:#FF2D6B;--blush:#FF85AA;--gold:#F5C842;--lavender:#C084FC;--deep:#04000A;--cream:#FFF4EE;}
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Orbitron:wght@700&family=Pinyon+Script&display=swap');
+:root{--rose:#FF2D6B;--blush:#FF85AA;--gold:#F5C842;--lav:#C084FC;--teal:#50E3C2;--deep:#03000A;--cream:#FFF4EE;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html,body{width:100%;height:100%;overflow:hidden;background:var(--deep);}
 body{font-family:'Orbitron',monospace;color:var(--cream);touch-action:none;user-select:none;-webkit-user-select:none;}
 
+/* SCREENS */
 .screen{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;
   align-items:center;justify-content:flex-start;overflow-y:auto;
-  -webkit-overflow-scrolling:touch;padding:28px 20px 44px;gap:16px;
-  text-align:center;opacity:0;pointer-events:none;transition:opacity .5s;}
+  -webkit-overflow-scrolling:touch;padding:28px 20px 44px;gap:15px;
+  text-align:center;opacity:0;pointer-events:none;transition:opacity .6s;}
 .screen.on{opacity:1;pointer-events:all;}
 #s-game{padding:0;overflow:hidden;}
 #s-game.on{display:block;}
+#c{display:block;width:100%;height:100%;}
 
-/* KEY IPHONE TRICK: render at half res, scale up via CSS — 75% less GPU */
-#c{display:block;width:100%;height:100%;image-rendering:auto;}
-
-#hud{position:fixed;top:0;left:0;right:0;z-index:20;display:none;
-  padding:8px 14px;background:linear-gradient(rgba(4,0,10,.9),transparent);
-  pointer-events:none;align-items:center;justify-content:space-between;}
-#hud.on{display:flex;}
-.lb-l{width:clamp(24px,6vw,34px);height:clamp(24px,6vw,34px);border-radius:50%;
-  border:1.5px solid rgba(192,132,252,.3);background:rgba(20,0,40,.7);
-  display:flex;align-items:center;justify-content:center;
-  font-weight:700;font-size:clamp(.55rem,1.8vw,.85rem);
-  color:rgba(192,132,252,.38);transition:all .3s;}
-.lb-l.got{color:var(--gold);border-color:var(--gold);
-  box-shadow:0 0 10px rgba(245,200,66,.5);animation:lbp .3s ease;}
-@keyframes lbp{0%{transform:scale(1.5)}100%{transform:scale(1)}}
-#letters-row{display:flex;gap:5px;}
-#lives-row{display:flex;gap:3px;font-size:clamp(.85rem,2.5vw,1.15rem);}
-.life.lost{opacity:.18;transform:scale(.7);}
-#score-lbl{font-size:clamp(.55rem,1.6vw,.75rem);color:var(--gold);letter-spacing:.1em;}
-#move-hint{position:fixed;bottom:clamp(90px,18vh,110px);left:50%;transform:translateX(-50%);
-  z-index:20;font-size:clamp(.6rem,1.8vw,.78rem);letter-spacing:.15em;
-  color:rgba(255,244,238,.35);pointer-events:none;display:none;}
-#move-hint.on{display:block;}
-
-/* intro */
+/* INTRO */
 .eye{font-size:clamp(8px,2vw,11px);letter-spacing:.4em;text-transform:uppercase;color:rgba(245,200,66,.6);}
-.big-title{font-family:'Pinyon Script',cursive;font-size:clamp(3rem,14vw,7rem);line-height:1.05;
-  background:linear-gradient(135deg,var(--blush),var(--gold),var(--lavender));
+.big-title{font-family:'Pinyon Script',cursive;font-size:clamp(3rem,13vw,7rem);line-height:1.05;
+  background:linear-gradient(135deg,var(--blush),var(--gold),var(--lav));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  filter:drop-shadow(0 0 28px rgba(255,45,107,.7));
-  animation:glow 3s ease-in-out infinite alternate;}
+  filter:drop-shadow(0 0 28px rgba(255,45,107,.7));animation:glow 3s ease-in-out infinite alternate;}
 @keyframes glow{from{filter:drop-shadow(0 0 18px rgba(255,45,107,.5))}
-  to{filter:drop-shadow(0 0 48px rgba(255,45,107,.9)) drop-shadow(0 0 70px rgba(245,200,66,.4))}}
+  to{filter:drop-shadow(0 0 50px rgba(255,45,107,.9)) drop-shadow(0 0 70px rgba(245,200,66,.4))}}
 .intro-sub{font-family:'Playfair Display',serif;font-style:italic;
-  font-size:clamp(.88rem,2.8vw,1.1rem);color:rgba(255,244,238,.62);max-width:320px;line-height:1.75;}
+  font-size:clamp(.88rem,2.8vw,1.12rem);color:rgba(255,244,238,.62);max-width:330px;line-height:1.8;}
 .rules{background:rgba(20,0,40,.65);border:1px solid rgba(192,132,252,.2);
-  border-radius:16px;padding:14px 18px;max-width:310px;width:100%;
+  border-radius:16px;padding:14px 18px;max-width:315px;width:100%;
   display:flex;flex-direction:column;gap:9px;}
 .rr{display:flex;align-items:flex-start;gap:10px;text-align:left;}
 .ri{font-size:1.1rem;flex-shrink:0;margin-top:1px;}
 .rt{font-size:clamp(9px,2vw,11px);font-family:'Playfair Display',serif;
-  font-style:italic;color:rgba(255,244,238,.75);line-height:1.5;}
+  font-style:italic;color:rgba(255,244,238,.78);line-height:1.5;}
 
-/* win / over */
+/* HUD */
+#hud{position:fixed;top:0;left:0;right:0;z-index:20;display:none;
+  padding:8px 14px 6px;pointer-events:none;
+  background:linear-gradient(rgba(3,0,10,.9),transparent);}
+#hud.on{display:flex;align-items:center;justify-content:space-between;}
+#prog-row{display:flex;gap:5px;}
+.prog-dot{width:clamp(22px,5.5vw,30px);height:clamp(22px,5.5vw,30px);border-radius:50%;
+  border:1.5px solid rgba(192,132,252,.3);background:rgba(20,0,40,.7);
+  display:flex;align-items:center;justify-content:center;
+  font-size:clamp(.5rem,1.6vw,.78rem);color:rgba(192,132,252,.38);
+  font-family:'Orbitron',monospace;font-weight:700;transition:all .35s;}
+.prog-dot.done{color:var(--gold);border-color:var(--gold);
+  background:rgba(80,40,0,.55);box-shadow:0 0 10px rgba(245,200,66,.5);
+  animation:dp .35s ease;}
+@keyframes dp{0%{transform:scale(1.5)}100%{transform:scale(1)}}
+#level-lbl{font-size:clamp(.55rem,1.6vw,.75rem);color:var(--lav);letter-spacing:.1em;}
+
+/* REVEAL POPUP */
+#reveal{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;
+  background:rgba(3,0,10,.8);backdrop-filter:blur(5px);
+  opacity:0;pointer-events:none;transition:opacity .4s;padding:20px;}
+#reveal.on{opacity:1;pointer-events:all;}
+#reveal-box{background:linear-gradient(145deg,rgba(28,0,48,.97),rgba(8,0,16,.99));
+  border:1px solid rgba(192,132,252,.3);border-radius:24px;
+  padding:clamp(20px,5vw,34px) clamp(22px,5vw,40px);
+  max-width:min(380px,92vw);width:100%;
+  display:flex;flex-direction:column;gap:12px;text-align:center;
+  box-shadow:0 12px 60px rgba(255,45,107,.2);}
+#rev-constellation{font-size:2.2rem;line-height:1;}
+#rev-name{font-family:'Playfair Display',serif;font-style:italic;font-weight:700;
+  font-size:clamp(1.2rem,4.5vw,1.6rem);
+  background:linear-gradient(135deg,var(--blush),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+#rev-letter{font-family:'Orbitron',monospace;font-size:clamp(2rem,8vw,3rem);
+  color:var(--gold);text-shadow:0 0 20px rgba(245,200,66,.6);letter-spacing:.15em;}
+#rev-msg{font-family:'Playfair Display',serif;font-style:italic;
+  font-size:clamp(.88rem,2.8vw,1.05rem);color:rgba(255,244,238,.82);line-height:1.75;}
+#rev-progress{font-family:'Orbitron',monospace;font-size:clamp(7px,1.8vw,10px);
+  letter-spacing:.2em;color:rgba(255,244,238,.3);text-transform:uppercase;}
+.rev-btn{font-family:'Orbitron',monospace;font-size:clamp(9px,2vw,11px);
+  letter-spacing:.2em;text-transform:uppercase;padding:11px 28px;
+  border:none;border-radius:50px;cursor:pointer;align-self:center;
+  background:linear-gradient(135deg,var(--rose),#9B0030);color:#fff;
+  box-shadow:0 0 24px rgba(255,45,107,.45);transition:transform .15s;}
+.rev-btn:active{transform:scale(1.06);}
+
+/* WIN */
 .win-name{font-family:'Pinyon Script',cursive;font-size:clamp(4rem,18vw,9rem);line-height:1;
-  background:linear-gradient(135deg,var(--blush),var(--gold),var(--lavender),var(--blush));
+  background:linear-gradient(135deg,var(--blush),var(--gold),var(--lav),var(--blush));
   background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
   background-clip:text;filter:drop-shadow(0 0 40px rgba(255,45,107,.8));
   animation:shimmer 2.5s linear infinite,winp .6s cubic-bezier(.2,1.4,.4,1) forwards;}
 @keyframes shimmer{0%{background-position:0% 50%}100%{background-position:300% 50%}}
 @keyframes winp{0%{transform:scale(0) rotate(-8deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
 .win-letters{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
-.wl{width:clamp(32px,8vw,46px);height:clamp(32px,8vw,46px);border-radius:50%;
+.wl{width:clamp(34px,8.5vw,48px);height:clamp(34px,8.5vw,48px);border-radius:50%;
   border:2px solid var(--gold);background:rgba(245,200,66,.12);
   display:flex;align-items:center;justify-content:center;
-  font-weight:700;font-size:clamp(.8rem,2.5vw,1.1rem);color:var(--gold);
-  box-shadow:0 0 12px rgba(245,200,66,.5);opacity:0;transform:scale(0);
+  font-weight:700;font-size:clamp(.82rem,2.6vw,1.2rem);color:var(--gold);
+  box-shadow:0 0 14px rgba(245,200,66,.5);opacity:0;transform:scale(0);
   animation:li .4s cubic-bezier(.2,1.4,.4,1) forwards;}
-.wl:nth-child(1){animation-delay:.05s}.wl:nth-child(2){animation-delay:.15s}
-.wl:nth-child(3){animation-delay:.25s}.wl:nth-child(4){animation-delay:.35s}
-.wl:nth-child(5){animation-delay:.45s}.wl:nth-child(6){animation-delay:.55s}
+.wl:nth-child(1){animation-delay:.05s}.wl:nth-child(2){animation-delay:.18s}
+.wl:nth-child(3){animation-delay:.31s}.wl:nth-child(4){animation-delay:.44s}
+.wl:nth-child(5){animation-delay:.57s}.wl:nth-child(6){animation-delay:.70s}
 @keyframes li{to{opacity:1;transform:scale(1)}}
+.win-letter-msg{font-family:'Playfair Display',serif;font-style:italic;
+  font-size:clamp(.82rem,2.5vw,.98rem);color:rgba(255,244,238,.6);
+  max-width:360px;line-height:1.65;}
 .win-quote{font-family:'Playfair Display',serif;font-style:italic;
-  font-size:clamp(.85rem,2.6vw,1.05rem);color:rgba(255,244,238,.75);
-  max-width:340px;line-height:1.8;border-left:2px solid var(--rose);
-  padding-left:14px;text-align:left;}
-.sstat{font-size:clamp(.72rem,2vw,.88rem);color:rgba(255,244,238,.35);letter-spacing:.08em;}
-.over-title{font-family:'Playfair Display',serif;font-style:italic;
-  font-size:clamp(2rem,9vw,3.5rem);color:var(--blush);}
-.over-sub{font-family:'Playfair Display',serif;font-style:italic;
-  font-size:clamp(.85rem,2.8vw,1.05rem);color:rgba(255,244,238,.55);
-  max-width:300px;line-height:1.7;}
-.btn{font-family:'Orbitron',monospace;font-size:clamp(9px,2vw,11px);
-  letter-spacing:.2em;text-transform:uppercase;padding:13px 32px;
-  border:none;border-radius:50px;cursor:pointer;
+  font-size:clamp(.9rem,2.8vw,1.12rem);color:rgba(255,244,238,.82);
+  max-width:360px;line-height:1.85;
+  border-left:2px solid var(--rose);padding-left:14px;text-align:left;}
+.sstat{font-size:clamp(.7rem,1.9vw,.85rem);color:rgba(255,244,238,.3);letter-spacing:.08em;}
+.btn{font-family:'Orbitron',monospace;font-size:clamp(9px,2vw,11px);letter-spacing:.2em;
+  text-transform:uppercase;padding:13px 32px;border:none;border-radius:50px;cursor:pointer;
   background:linear-gradient(135deg,var(--rose),#9B0030);color:#fff;
-  box-shadow:0 0 24px rgba(255,45,107,.5);transition:transform .15s;}
+  box-shadow:0 0 26px rgba(255,45,107,.5);transition:transform .15s;}
 .btn:active{transform:scale(1.05);}
 .btn-g{background:transparent;border:1.5px solid rgba(255,45,107,.35);
   box-shadow:none;color:rgba(255,244,238,.65);}
-.btn-g:active{border-color:var(--rose);color:#fff;}
 </style>
 </head>
 <body>
 
+<!-- INTRO -->
 <div class="screen on" id="s-intro">
-  <p class="eye">somewhere in the galaxy</p>
-  <div class="big-title">Favour's Stars</div>
-  <p class="intro-sub">Favour floats through her own galaxy on a little cloud. Move her to catch falling stars — six spell her name.</p>
+  <p class="eye">the final love letter</p>
+  <div class="big-title">Written in Stars</div>
+  <p class="intro-sub">Six constellations float in her galaxy. Connect the stars in the right order to complete each one — and unlock a piece of a love letter written just for her.</p>
   <div class="rules">
-    <div class="rr"><span class="ri">☁️</span><span class="rt">Drag left & right to move Favour's cloud</span></div>
-    <div class="rr"><span class="ri">⭐</span><span class="rt">Catch glowing letter orbs to spell F·A·V·O·U·R</span></div>
-    <div class="rr"><span class="ri">☄️</span><span class="rt">Dodge comets — 3 lives total</span></div>
-    <div class="rr"><span class="ri">🛡️</span><span class="rt">Catch teal shields for brief invincibility</span></div>
+    <div class="rr"><span class="ri">✨</span><span class="rt">Tap the glowing stars in numbered order to draw each constellation</span></div>
+    <div class="rr"><span class="ri">💌</span><span class="rt">Each completed shape unlocks one letter of FAVOUR and a message</span></div>
+    <div class="rr"><span class="ri">🌟</span><span class="rt">Complete all 6 constellations to read her full love letter</span></div>
+    <div class="rr"><span class="ri">💖</span><span class="rt">There are no wrong moves — just her stars, waiting to be connected</span></div>
   </div>
-  <button class="btn" id="btn-start">Float Into the Galaxy ✨</button>
+  <button class="btn" id="btn-start">Read the Stars ✨</button>
 </div>
 
+<!-- GAME -->
 <div class="screen" id="s-game"><canvas id="c"></canvas></div>
 
+<!-- REVEAL POPUP -->
+<div id="reveal">
+  <div id="reveal-box">
+    <div id="rev-constellation"></div>
+    <div id="rev-name"></div>
+    <div id="rev-letter"></div>
+    <p id="rev-msg"></p>
+    <p id="rev-progress"></p>
+    <button class="rev-btn" id="rev-btn">Continue ✨</button>
+  </div>
+</div>
+
+<!-- WIN -->
 <div class="screen" id="s-win">
-  <p class="eye">Every star caught, every letter found</p>
+  <p class="eye">She read every star</p>
   <div class="win-name">Favour</div>
   <div class="win-letters">
     <div class="wl">F</div><div class="wl">A</div><div class="wl">V</div>
     <div class="wl">O</div><div class="wl">U</div><div class="wl">R</div>
   </div>
-  <blockquote class="win-quote">"She doesn't just belong to this world — she belongs to the whole galaxy. Every star up there knows her name."</blockquote>
+  <p class="win-letter-msg" id="win-compiled"></p>
+  <blockquote class="win-quote">"She is every constellation — the shape the stars make when they decide to mean something."</blockquote>
   <p class="sstat" id="win-stat"></p>
   <button class="btn" id="btn-wr">Play Again 🌹</button>
 </div>
 
-<div class="screen" id="s-over">
-  <p class="eye">The stars are still waiting…</p>
-  <div class="over-title">Try Again</div>
-  <p class="over-sub" id="over-msg">The galaxy will always have room for her.</p>
-  <p class="sstat" id="over-stat"></p>
-  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
-    <button class="btn" id="btn-retry">Try Again 💪</button>
-    <button class="btn btn-g" id="btn-menu">Menu</button>
-  </div>
-</div>
-
+<!-- HUD -->
 <div id="hud">
-  <div id="letters-row"></div>
-  <div id="score-lbl">0</div>
-  <div id="lives-row"></div>
+  <div id="prog-row"></div>
+  <div id="level-lbl">LEVEL <span id="lvl-num">1</span> / 6</div>
 </div>
-<div id="move-hint">← DRAG LEFT & RIGHT →</div>
 
 <script>
 'use strict';
-// ═══════════════════════════════════════════════════
-//  CANVAS — render at HALF resolution for iPhone 7
-// ═══════════════════════════════════════════════════
-const canvas = document.getElementById('c');
-const ctx    = canvas.getContext('2d', {alpha:false}); // alpha:false = big GPU win
-let W=0, H=0; // logical (half) size
+// ══════════════════════════════════════════════
+//  CANVAS
+// ══════════════════════════════════════════════
+const canvas=document.getElementById('c');
+const ctx=canvas.getContext('2d',{alpha:false});
+let W=0,H=0,DPR=1;
 
 function resize(){
-  // CSS size = full screen
-  const cw = canvas.offsetWidth  || innerWidth;
-  const ch = canvas.offsetHeight || innerHeight;
-  // pixel buffer = HALF size  →  4× fewer pixels to fill each frame
-  W = canvas.width  = Math.round(cw * 0.5);
-  H = canvas.height = Math.round(ch * 0.5);
-  buildCaches();
+  DPR=Math.min(window.devicePixelRatio||1,2);
+  W=canvas.offsetWidth||innerWidth;
+  H=canvas.offsetHeight||innerHeight;
+  canvas.width =Math.round(W*DPR);
+  canvas.height=Math.round(H*DPR);
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  buildSkyCache();
 }
 
-// ═══════════════════════════════════════════════════
-//  CONSTANTS
-// ═══════════════════════════════════════════════════
-const LETTERS  = ['F','A','V','O','U','R'];
-const LCOLS    = ['#FF2D6B','#FF85AA','#F5C842','#C084FC','#FF2D6B','#F5C842'];
-const BASE_SPD = 1.1;           // slower to feel smooth at half-res
-const PLAYER_Y = 0.78;
-const MAX_OBJ  = 10;            // hard cap — no pileup
-const TRAIL_LEN= 8;             // comet trail length
-
-// ═══════════════════════════════════════════════════
-//  PRE-RENDERED SPRITE CACHE
-//  Everything drawn here once; drawImage() per frame
-// ═══════════════════════════════════════════════════
-let cloudSprite=null;            // cloud + favour
-let CW=0, CH=0;                  // sprite logical size
-
-// pre-baked object sprites keyed by "type:r:col"
-const spriteCache = {};
-
-function getSprite(type, r, col){
-  const key = type+':'+Math.round(r)+':'+col;
-  if(spriteCache[key]) return spriteCache[key];
-  const sz = Math.round(r*4);
-  const oc = document.createElement('canvas');
-  oc.width = oc.height = sz;
-  const c  = oc.getContext('2d');
-  const cx = sz/2, cy = sz/2;
-
-  if(type==='star'||type==='bonus'){
-    // simple flat star — NO gradient, NO shadow
-    c.fillStyle = col;
-    drawStarPath(c, cx, cy, r*0.95, r*0.42);
-    c.fill();
-    // tiny highlight
-    c.fillStyle = 'rgba(255,255,255,.45)';
-    drawStarPath(c, cx-r*.08, cy-r*.08, r*.4, r*.18);
-    c.fill();
-
-  } else if(type==='letter'){
-    // glow ring (pre-baked, no per-frame gradient)
-    c.globalAlpha=0.22; c.fillStyle=col;
-    c.beginPath(); c.arc(cx,cy,r*1.85,0,Math.PI*2); c.fill();
-    c.globalAlpha=1;
-    // orb body — simple solid + rim
-    c.fillStyle = col;
-    c.beginPath(); c.arc(cx,cy,r,0,Math.PI*2); c.fill();
-    c.fillStyle = 'rgba(255,255,255,.55)';
-    c.beginPath(); c.arc(cx-r*.22,cy-r*.22,r*.38,0,Math.PI*2); c.fill();
-
-  } else if(type==='shield'){
-    c.globalAlpha=0.2; c.fillStyle='#7FFFD4';
-    c.beginPath(); c.arc(cx,cy,r*2,0,Math.PI*2); c.fill();
-    c.globalAlpha=1;
-    c.fillStyle='#7FFFD4';
-    c.beginPath(); c.arc(cx,cy,r,0,Math.PI*2); c.fill();
-    c.fillStyle='rgba(255,255,255,.6)';
-    c.beginPath(); c.arc(cx-r*.2,cy-r*.2,r*.35,0,Math.PI*2); c.fill();
-
-  } else if(type==='comet'){
-    // head only (trail drawn separately as simple rects)
-    c.fillStyle = '#FF6633';
-    c.beginPath(); c.arc(cx,cy,r,0,Math.PI*2); c.fill();
-    c.fillStyle = '#FFCC44';
-    c.beginPath(); c.arc(cx-r*.2,cy-r*.2,r*.45,0,Math.PI*2); c.fill();
-    c.fillStyle = 'rgba(255,255,255,.7)';
-    c.beginPath(); c.arc(cx-r*.3,cy-r*.3,r*.18,0,Math.PI*2); c.fill();
-  }
-
-  spriteCache[key] = oc;
-  return oc;
-}
-
-// letter label sprites (text on orb) — cached per letter+col
-const letterLabelCache = {};
-function getLetterLabel(letter, col, r){
-  const key=letter+col+Math.round(r);
-  if(letterLabelCache[key]) return letterLabelCache[key];
-  const sz=Math.round(r*2.2);
-  const oc=document.createElement('canvas'); oc.width=oc.height=sz;
-  const c=oc.getContext('2d');
-  c.fillStyle='#fff';
-  c.font=`700 ${Math.round(r*.85)}px Orbitron,monospace`;
-  c.textAlign='center'; c.textBaseline='middle';
-  c.fillText(letter,sz/2,sz/2+1);
-  letterLabelCache[key]=oc;
-  return oc;
-}
-
-function drawStarPath(c,cx,cy,r1,r2){
-  c.beginPath();
-  for(let i=0;i<5;i++){
-    const a=i*Math.PI*2/5-Math.PI/2;
-    const b=a+Math.PI/5;
-    if(i===0)c.moveTo(cx+Math.cos(a)*r1,cy+Math.sin(a)*r1);
-    else      c.lineTo(cx+Math.cos(a)*r1,cy+Math.sin(a)*r1);
-    c.lineTo(cx+Math.cos(b)*r2,cy+Math.sin(b)*r2);
-  }
-  c.closePath();
-}
-
-function buildCloudSprite(){
-  CW = Math.round(W*0.22);
-  CH = Math.round(CW*0.55);
-  const oc = document.createElement('canvas');
-  oc.width=CW*2; oc.height=CH*2;
-  const c=oc.getContext('2d');
-  c.scale(2,2); // 2x internal for crispness
-
-  const w=CW, h=CH;
-  const fx=w*.5, fy=h*.38;
-
-  // cloud puffs — flat white, NO gradient, NO shadow
-  const puffs=[
-    {x:w*.5,y:h*.65,r:h*.38},{x:w*.26,y:h*.75,r:h*.27},
-    {x:w*.74,y:h*.75,r:h*.28},{x:w*.14,y:h*.83,r:h*.18},
-    {x:w*.86,y:h*.83,r:h*.18}
+// ══════════════════════════════════════════════
+//  CONSTELLATION DATA
+//  Each level: shape name, emoji, letter, lines
+//  nodes are fractions of W/H placed nicely
+// ══════════════════════════════════════════════
+function makeLevels(){
+  return [
+    {
+      letter:'F', name:'The Flame',emoji:'🔥',
+      col:'#FF2D6B',
+      // nodes as [fracX, fracY] — defined in fraction space
+      nodes:[[.5,.18],[.65,.32],[.5,.42],[.65,.55],[.5,.68],[.35,.55],[.5,.42],[.35,.32]],
+      // connection order by node indices (star 1→2→3…)
+      order:[0,1,2,3,4,5,6,7],
+      msg:'She is a flame — she doesn\'t ask permission to burn bright. She just does, quietly, inevitably, in a way that warms everything around her.'
+    },
+    {
+      letter:'A', name:'The Arrow',emoji:'💘',
+      col:'#FF85AA',
+      nodes:[[.5,.15],[.28,.65],[.5,.52],[.72,.65],[.5,.15],[.5,.52]],
+      order:[0,1,2,3,0,2],
+      msg:'She is an arrow — precise, intentional, aimed somewhere beautiful. When she decides on something — a dream, a person, a moment — she does not waver.'
+    },
+    {
+      letter:'V', name:'The Valley',emoji:'🌸',
+      col:'#C084FC',
+      nodes:[[.18,.2],[.32,.48],[.5,.62],[.68,.48],[.82,.2],[.5,.62],[.5,.35]],
+      order:[0,1,2,3,4,2,6],
+      msg:'She is a valley — the kind of place people travel a long way to find. A softness between the hard edges of the world. Everyone feels safer when she\'s around.'
+    },
+    {
+      letter:'O', name:'The Orbit',emoji:'🌙',
+      col:'#F5C842',
+      nodes:[[.5,.14],[.73,.24],[.82,.5],[.73,.76],[.5,.86],[.27,.76],[.18,.5],[.27,.24]],
+      order:[0,1,2,3,4,5,6,7,0],
+      msg:'She is an orbit — everything moves around her without even realising it. She has that kind of gravity. The rare kind that pulls gently, not desperately.'
+    },
+    {
+      letter:'U', name:'The Cup',emoji:'✨',
+      col:'#50E3C2',
+      nodes:[[.22,.18],[.22,.52],[.3,.68],[.5,.76],[.7,.68],[.78,.52],[.78,.18],[.5,.76]],
+      order:[0,1,2,3,4,5,6,3],
+      msg:'She is a cup — the kind that holds things. Warmth, memories, other people\'s sadness, entire conversations that meant everything. She holds it all, and never spills.'
+    },
+    {
+      letter:'R', name:'The Rose',emoji:'🌹',
+      col:'#FF2D6B',
+      nodes:[[.5,.12],[.68,.28],[.72,.5],[.62,.68],[.5,.82],[.38,.68],[.28,.5],[.32,.28],[.5,.12],[.5,.48],[.68,.28],[.32,.28],[.5,.48],[.72,.5],[.28,.5]],
+      order:[0,1,2,3,4,5,6,7,8,9,10,11,9,12,13],
+      msg:'She is a rose — complex, layered, more beautiful the closer you look. The kind of beautiful that asks you to be careful, to pay attention, to deserve it.'
+    },
   ];
-  c.fillStyle='rgba(235,215,255,.92)';
-  c.beginPath();
-  for(const p of puffs){c.moveTo(p.x+p.r,p.y);c.arc(p.x,p.y,p.r,0,Math.PI*2);}
-  c.fill();
-  // subtle tint rim
-  c.strokeStyle='rgba(192,132,252,.3)'; c.lineWidth=1;
-  c.beginPath();
-  for(const p of puffs){c.moveTo(p.x+p.r,p.y);c.arc(p.x,p.y,p.r,0,Math.PI*2);}
-  c.stroke();
-
-  // Favour — flat colours only
-  // body
-  c.fillStyle='#FF85AA';
-  c.beginPath();c.ellipse(fx,fy,h*.12,h*.19,0,0,Math.PI*2);c.fill();
-  // head
-  c.fillStyle='#FFD4B2';
-  c.beginPath();c.arc(fx,fy-h*.17,h*.12,0,Math.PI*2);c.fill();
-  // hair
-  c.fillStyle='#3A1A00';
-  c.beginPath();c.arc(fx,fy-h*.2,h*.13,Math.PI,2*Math.PI);c.fill();
-  c.beginPath();c.arc(fx-h*.065,fy-h*.15,h*.065,0,Math.PI*2);c.fill();
-  c.beginPath();c.arc(fx+h*.065,fy-h*.15,h*.065,0,Math.PI*2);c.fill();
-  // eyes
-  c.fillStyle='#220000';
-  c.beginPath();c.arc(fx-h*.04,fy-h*.16,h*.022,0,Math.PI*2);c.fill();
-  c.beginPath();c.arc(fx+h*.04,fy-h*.16,h*.022,0,Math.PI*2);c.fill();
-  // smile
-  c.strokeStyle='#CC3355';c.lineWidth=1;
-  c.beginPath();c.arc(fx,fy-h*.11,h*.035,.1,Math.PI-.1);c.stroke();
-  // skirt
-  c.fillStyle='#FF2D6B';
-  c.beginPath();c.moveTo(fx-h*.12,fy+h*.05);c.lineTo(fx-h*.17,fy+h*.21);
-  c.lineTo(fx+h*.17,fy+h*.21);c.lineTo(fx+h*.12,fy+h*.05);c.closePath();c.fill();
-  // star in hand
-  c.fillStyle='#F5C842';
-  drawStarPath(c,fx+h*.17,fy-h*.1,h*.058,h*.026);c.fill();
-
-  return oc;
 }
 
-function buildCaches(){
-  cloudSprite=buildCloudSprite();
-  // clear object sprite cache on resize (sizes change)
-  for(const k in spriteCache) delete spriteCache[k];
-  for(const k in letterLabelCache) delete letterLabelCache[k];
+let LEVELS=[];
 
-  // pre-bake sky — one fillRect per frame, no gradient recreation
-  gSky=ctx.createLinearGradient(0,0,0,H);
-  gSky.addColorStop(0,'#04000A');
-  gSky.addColorStop(.45,'#0A0018');
-  gSky.addColorStop(1,'#180028');
-}
-
+// ══════════════════════════════════════════════
+//  BACKGROUND STARS — static, batched
+// ══════════════════════════════════════════════
+let bgStars=[];
 let gSky=null;
+let bgCanvas=null; // pre-drawn bg
 
-// ═══════════════════════════════════════════════════
-//  PARTICLE POOL — typed arrays, zero alloc
-// ═══════════════════════════════════════════════════
-const MP=80;
+function buildSkyCache(){
+  // build static bg once
+  bgCanvas=document.createElement('canvas');
+  bgCanvas.width=Math.round(W*DPR);
+  bgCanvas.height=Math.round(H*DPR);
+  const bc=bgCanvas.getContext('2d');
+  bc.scale(DPR,DPR);
+
+  // gradient sky
+  const g=bc.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,'#03000A');g.addColorStop(.4,'#08001A');g.addColorStop(1,'#140030');
+  bc.fillStyle=g;bc.fillRect(0,0,W,H);
+
+  // nebula blobs — painted once
+  const blobs=[
+    {x:W*.2,y:H*.3,rx:W*.28,ry:H*.22,c:'rgba(100,30,160,.07)'},
+    {x:W*.78,y:H*.6,rx:W*.32,ry:H*.2,c:'rgba(200,40,90,.05)'},
+    {x:W*.5,y:H*.75,rx:W*.4,ry:H*.15,c:'rgba(30,180,180,.04)'},
+  ];
+  for(const b of blobs){
+    const ng=bc.createRadialGradient(b.x,b.y,0,b.x,b.y,Math.max(b.rx,b.ry));
+    ng.addColorStop(0,b.c);ng.addColorStop(1,'rgba(0,0,0,0)');
+    bc.fillStyle=ng;bc.beginPath();bc.ellipse(b.x,b.y,b.rx,b.ry,0,0,Math.PI*2);bc.fill();
+  }
+
+  // bg stars
+  const n=Math.min(140,Math.floor(W*H/4000));
+  bgStars=[];
+  for(let i=0;i<n;i++)
+    bgStars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*.95+.18,warm:Math.random()>.55});
+  // batch draw cool stars
+  bc.fillStyle='rgba(160,110,255,.5)';bc.beginPath();
+  for(const s of bgStars){if(!s.warm){bc.moveTo(s.x+s.r,s.y);bc.arc(s.x,s.y,s.r,0,Math.PI*2);}}
+  bc.fill();
+  bc.fillStyle='rgba(255,140,180,.45)';bc.beginPath();
+  for(const s of bgStars){if(s.warm){bc.moveTo(s.x+s.r,s.y);bc.arc(s.x,s.y,s.r,0,Math.PI*2);}}
+  bc.fill();
+}
+
+// ══════════════════════════════════════════════
+//  PARTICLE POOL
+// ══════════════════════════════════════════════
+const MP=100;
 const PX=new Float32Array(MP),PY=new Float32Array(MP);
 const PVX=new Float32Array(MP),PVY=new Float32Array(MP);
 const PL=new Float32Array(MP),PSZ=new Float32Array(MP);
-const PC=new Array(MP).fill('#F5C842');
+const PCOL=new Array(MP).fill('#F5C842');
 let pN=0;
 
 function spawnP(x,y,col,n,spd){
   for(let i=0;i<n;i++){
     if(pN>=MP)break;
-    const a=Math.random()*Math.PI*2, s=.5+Math.random()*(spd||3);
-    PX[pN]=x;PY[pN]=y;
-    PVX[pN]=Math.cos(a)*s; PVY[pN]=Math.sin(a)*s-.8;
-    PL[pN]=1; PSZ[pN]=1.5+Math.random()*2.5; PC[pN]=col; pN++;
+    const a=Math.random()*Math.PI*2,s=.5+Math.random()*(spd||3.5);
+    PX[pN]=x;PY[pN]=y;PVX[pN]=Math.cos(a)*s;PVY[pN]=Math.sin(a)*s-.8;
+    PL[pN]=1;PSZ[pN]=1.5+Math.random()*3;PCOL[pN]=col;pN++;
   }
 }
 function tickP(){
   let a=0;
   for(let i=0;i<pN;i++){
-    PVY[i]+=.1; PX[i]+=PVX[i]; PY[i]+=PVY[i]; PL[i]-=.03;
+    PVY[i]+=.09;PX[i]+=PVX[i];PY[i]+=PVY[i];PL[i]-=.025;
     if(PL[i]>0){
-      if(a!==i){PX[a]=PX[i];PY[a]=PY[i];PVX[a]=PVX[i];PVY[a]=PVY[i];PL[a]=PL[i];PSZ[a]=PSZ[i];PC[a]=PC[i];}
+      if(a!==i){PX[a]=PX[i];PY[a]=PY[i];PVX[a]=PVX[i];PVY[a]=PVY[i];PL[a]=PL[i];PSZ[a]=PSZ[i];PCOL[a]=PCOL[i];}
       a++;
     }
   }
   pN=a;
-  // batch all particles — group by colour to minimise fillStyle changes
-  // (simple approach: just draw all, fillStyle change cost is low for 80 items)
   for(let i=0;i<pN;i++){
-    ctx.globalAlpha=PL[i]*.85;
-    ctx.fillStyle=PC[i];
-    ctx.fillRect(PX[i]-PSZ[i],PY[i]-PSZ[i],PSZ[i]*2,PSZ[i]*2); // fillRect not arc — faster
+    ctx.globalAlpha=PL[i]*.88;ctx.fillStyle=PCOL[i];
+    ctx.fillRect(PX[i]-PSZ[i],PY[i]-PSZ[i],PSZ[i]*2,PSZ[i]*2);
   }
   ctx.globalAlpha=1;
 }
 
-// ═══════════════════════════════════════════════════
-//  BACKGROUND STARS — static positions, TWO batch draws
-// ═══════════════════════════════════════════════════
-let stars=[];
-let starTick=0; // only update alpha every 2 frames
-
-function initStars(){
-  stars=[];
-  const n=Math.min(80,Math.floor(W*H/3000)); // fewer on small screens
-  for(let i=0;i<n;i++)
-    stars.push({x:Math.random()*W,y:Math.random()*H*.78,r:Math.random()*.9+.2,
-      a:Math.random(),ds:(Math.random()-.5)*.003,warm:Math.random()>.55});
-}
-
-function drawStars(){
-  starTick++;
-  if(starTick%2===0){ // update alphas every other frame only
-    for(const s of stars){s.a+=s.ds;if(s.a<0||s.a>1)s.ds*=-1;}
-  }
-  // two batched paths
-  ctx.beginPath();
-  for(const s of stars){if(!s.warm){ctx.moveTo(s.x+s.r,s.y);ctx.arc(s.x,s.y,s.r,0,Math.PI*2);}}
-  ctx.fillStyle='rgba(160,110,255,.58)';ctx.fill();
-  ctx.beginPath();
-  for(const s of stars){if(s.warm){ctx.moveTo(s.x+s.r,s.y);ctx.arc(s.x,s.y,s.r,0,Math.PI*2);}}
-  ctx.fillStyle='rgba(255,140,180,.48)';ctx.fill();
-}
-
-// ═══════════════════════════════════════════════════
+// ══════════════════════════════════════════════
 //  GAME STATE
-// ═══════════════════════════════════════════════════
-let state='idle',score=0,lives=3,frameCount=0,raf=null;
-let collected=[],nextLetterScore=400,scoreFlush=0;
-let invincible=0,shake=0;
-let playerX=0,targetX=0;
-let objects=[];
-let spawnTimer=0;
+// ══════════════════════════════════════════════
+let state='idle',level=0,nextNode=0,raf=null;
+let completed=[]; // which levels done
+let nodes=[];     // current level node positions {x,y,done}
+let drawnLines=[]; // {x1,y1,x2,y2}
+let drawProgress=0; // animated draw-in (0→1)
+let lineAnim={active:false,x1:0,y1:0,x2:0,x2t:0,y2t:0,t:0}; // animating line
+let twinkle=0;   // frame counter for star pulse
+let shakeF=0;
 
-// flat comet trail arrays (no per-object object allocation)
-// each comet gets a slot; trails stored flat
-const MAX_COMETS=3;
-const trailX=new Float32Array(MAX_COMETS*TRAIL_LEN);
-const trailY=new Float32Array(MAX_COMETS*TRAIL_LEN);
-const trailLen=new Int8Array(MAX_COMETS);
-let cometSlots=[]; // which object indices are comets
+// ══════════════════════════════════════════════
+//  INIT LEVEL
+// ══════════════════════════════════════════════
+function initLevel(lvl){
+  level=lvl; nextNode=0; drawnLines=[]; lineAnim.active=false;
 
-// ═══════════════════════════════════════════════════
-//  INIT
-// ═══════════════════════════════════════════════════
-function initGame(){
-  score=0;lives=3;frameCount=0;pN=0;
-  collected=[];nextLetterScore=400;invincible=0;shake=0;
-  playerX=W*.5;targetX=W*.5;
-  objects=[];spawnTimer=0;
-  trailLen.fill(0);cometSlots=[];
-  buildHUD();updateHUD();
+  const L=LEVELS[lvl];
+  // compute actual pixel positions from fractions
+  // leave room for HUD top and breathing room bottom
+  const padT=H*.12, padB=H*.07, padX=W*.1;
+  nodes=L.nodes.map((n,i)=>({
+    x: padX + n[0]*(W-padX*2),
+    y: padT + n[1]*(H-padT-padB),
+    done:false,
+    orderLabel: L.order.indexOf(i)>=0 ? L.order.indexOf(i)+1 : null
+  }));
+
+  document.getElementById('lvl-num').textContent=lvl+1;
+  updateProgDots();
 }
 
-// ═══════════════════════════════════════════════════
-//  OBJECT SPAWNING
-// ═══════════════════════════════════════════════════
-function spawnObject(){
-  if(objects.length>=MAX_OBJ) return; // hard cap
+// ══════════════════════════════════════════════
+//  TAP HANDLING
+// ══════════════════════════════════════════════
+const TAP_RADIUS_FRAC = 0.07; // fraction of min(W,H)
 
-  const diff=Math.min(1,score/3000);
-  const r = H * 0.038;
+function onTap(cx,cy){
+  if(state!=='playing') return;
+  if(lineAnim.active) return; // wait for animation
 
-  // decide type
-  const needLetter = collected.length<LETTERS.length
-    && score>=nextLetterScore
-    && !objects.some(o=>o.type==='letter');
+  const L=LEVELS[level];
+  const needed=L.order[nextNode];
+  const node=nodes[needed];
+  const TAP_R=Math.min(W,H)*TAP_RADIUS_FRAC;
+  const dx=cx-node.x, dy=cy-node.y;
 
-  let type;
-  if(needLetter){ type='letter'; }
-  else {
-    const roll=Math.random();
-    if(roll<.1+diff*.08)      type='comet';
-    else if(roll<.18+diff*.12) type='comet';
-    else if(roll<.22)          type='shield';
-    else if(roll<.3)           type='bonus';
-    else                       type='star';
-  }
+  if(dx*dx+dy*dy < TAP_R*TAP_R){
+    // correct tap!
+    node.done=true;
+    spawnP(node.x,node.y,L.col,14,4);
 
-  const x    = r*1.5 + Math.random()*(W-r*3);
-  const spd  = (BASE_SPD+diff*1.6) * (type==='comet'?1.5:1) * (.85+Math.random()*.3);
-  const vx   = type==='comet'?(Math.random()-.5)*1.5:0;
-  const idx  = type==='letter'?collected.length:0;
-  const col  = type==='letter'?LCOLS[idx]:
-               type==='comet' ?'#FF6633':
-               type==='shield'?'#7FFFD4':
-               type==='bonus' ?'#F5C842':'#CC99FF';
-
-  // pre-warm sprite cache now (not during draw)
-  getSprite(type, r, col);
-  if(type==='letter') getLetterLabel(LETTERS[idx], col, r);
-
-  const obj={type,x,y:-r*2,r,vy:spd,vx,col,
-    letter:type==='letter'?LETTERS[idx]:null,
-    idx, pulse:0,
-    cometSlot:type==='comet'?allocCometSlot():-1};
-
-  objects.push(obj);
-  if(type==='letter') nextLetterScore=score+350+idx*70;
-}
-
-function allocCometSlot(){
-  for(let i=0;i<MAX_COMETS;i++){
-    if(!objects.some(o=>o.cometSlot===i)){ trailLen[i]=0; return i; }
-  }
-  return -1;
-}
-
-// ═══════════════════════════════════════════════════
-//  UPDATE
-// ═══════════════════════════════════════════════════
-function update(){
-  frameCount++;
-
-  // smooth player move
-  playerX += (targetX-playerX)*0.16;
-  playerX  = Math.max(CW*.5, Math.min(W-CW*.5, playerX));
-
-  // keyboard move
-  if(keys.left)  targetX=Math.max(0,targetX-8);
-  if(keys.right) targetX=Math.min(W,targetX+8);
-
-  // spawn throttle
-  const interval=Math.max(35,72-Math.floor(score/220)*3);
-  if(++spawnTimer>=interval){spawnTimer=0;spawnObject();}
-
-  const py=H*PLAYER_Y;
-  const hw=CW*.44, hh=CH*.28; // hitbox half-sizes
-
-  for(let i=objects.length-1;i>=0;i--){
-    const o=objects[i];
-    o.y+=o.vy; o.x+=o.vx; o.pulse+=0.055;
-
-    // comet wall bounce + trail
-    if(o.type==='comet'){
-      if(o.x<o.r||o.x>W-o.r) o.vx*=-1;
-      if(o.cometSlot>=0){
-        const sl=o.cometSlot*TRAIL_LEN;
-        const tl=trailLen[o.cometSlot];
-        if(tl<TRAIL_LEN){ trailX[sl+tl]=o.x; trailY[sl+tl]=o.y; trailLen[o.cometSlot]++; }
-        else {
-          // shift left
-          for(let t=0;t<TRAIL_LEN-1;t++){trailX[sl+t]=trailX[sl+t+1];trailY[sl+t]=trailY[sl+t+1];}
-          trailX[sl+TRAIL_LEN-1]=o.x; trailY[sl+TRAIL_LEN-1]=o.y;
-        }
-      }
+    if(nextNode>0){
+      // animate line from prev to this node
+      const prev=nodes[L.order[nextNode-1]];
+      lineAnim={active:true,x1:prev.x,y1:prev.y,x2:prev.x,y2:prev.y,x2t:node.x,y2t:node.y,t:0};
     }
 
-    // off screen cull
-    if(o.y>H+40){objects.splice(i,1);continue;}
+    nextNode++;
 
-    // collision AABB + radius
-    const dx=Math.abs(playerX-o.x), dy=Math.abs(py-o.y);
-    if(dx<hw+o.r && dy<hh+o.r){
-      if(o.type==='comet'){
-        if(invincible<=0){
-          lives--;shake=14;invincible=80;
-          spawnP(o.x,o.y,'#FF6633',10,4);
-          updateHUD();if(lives<=0){endGame('over');return;}
-        }
-      } else if(o.type==='letter'){
-        collected.push(o.idx);
-        spawnP(o.x,o.y,o.col,16,4);
-        score+=200;updateHUD();
-        if(collected.length>=LETTERS.length){setTimeout(()=>endGame('win'),500);return;}
-      } else if(o.type==='shield'){
-        invincible=180;spawnP(o.x,o.y,'#7FFFD4',12,3);
-      } else {
-        score+=o.type==='bonus'?50:15;
-        spawnP(o.x,o.y,o.col,6,2.5);
-      }
-      objects.splice(i,1);
+    if(nextNode>=L.order.length){
+      // level complete!
+      setTimeout(()=>showReveal(level),600);
     }
+  } else {
+    // wrong tap — gentle shake
+    shakeF=8;
+    // hint flash on correct node
+    nodes[needed]._hint=18;
   }
-
-  if(invincible>0) invincible--;
 }
 
-// ═══════════════════════════════════════════════════
-//  DRAW — NO gradients created here, NO shadowBlur
-// ═══════════════════════════════════════════════════
+// ══════════════════════════════════════════════
+//  DRAW
+// ══════════════════════════════════════════════
 function draw(){
-  // shake
-  if(shake>0){ctx.save();ctx.translate((Math.random()-.5)*4,(Math.random()-.5)*3);shake--;}
+  twinkle++;
 
-  // sky — single fillRect with cached gradient
-  ctx.fillStyle=gSky; ctx.fillRect(0,0,W,H);
+  // static bg
+  if(bgCanvas) ctx.drawImage(bgCanvas,0,0,W,H);
+  else{ctx.fillStyle='#03000A';ctx.fillRect(0,0,W,H);}
 
-  drawStars();
+  if(state!=='playing') return;
+  if(shakeF>0){ctx.save();ctx.translate((Math.random()-.5)*4,(Math.random()-.5)*3);shakeF--;}
 
-  const py=H*PLAYER_Y;
+  const L=LEVELS[level];
 
-  // comet trails — simple fillRects, cheapest possible
-  for(let i=0;i<objects.length;i++){
-    const o=objects[i];
-    if(o.type!=='comet'||o.cometSlot<0) continue;
-    const sl=o.cometSlot*TRAIL_LEN;
-    const tl=trailLen[o.cometSlot];
-    for(let t=0;t<tl;t++){
-      const frac=(t+1)/tl;
-      ctx.globalAlpha=frac*.45;
-      ctx.fillStyle=frac>.55?'#FFAA44':'#FF6633';
-      const sz=o.r*frac*.9;
-      ctx.fillRect(trailX[sl+t]-sz*.5,trailY[sl+t]-sz*.5,sz,sz);
-    }
+  // ── draw completed lines ──
+  for(let i=0;i<drawnLines.length;i++){
+    const ln=drawnLines[i];
+    ctx.strokeStyle=L.col;ctx.lineWidth=1.8;ctx.globalAlpha=.55;
+    ctx.beginPath();ctx.moveTo(ln.x1,ln.y1);ctx.lineTo(ln.x2,ln.y2);ctx.stroke();
+    // glow pass
+    ctx.strokeStyle=L.col;ctx.lineWidth=5;ctx.globalAlpha=.12;
+    ctx.beginPath();ctx.moveTo(ln.x1,ln.y1);ctx.lineTo(ln.x2,ln.y2);ctx.stroke();
+  }
+  ctx.globalAlpha=1;
+
+  // ── animate line ──
+  if(lineAnim.active){
+    lineAnim.t=Math.min(lineAnim.t+0.09,1);
+    const t=lineAnim.t;
+    // ease out
+    const et=1-(1-t)*(1-t);
+    lineAnim.x2=lineAnim.x1+(lineAnim.x2t-lineAnim.x1)*et;
+    lineAnim.y2=lineAnim.y1+(lineAnim.y2t-lineAnim.y1)*et;
+    ctx.strokeStyle=L.col;ctx.lineWidth=2;ctx.globalAlpha=.7;
+    ctx.beginPath();ctx.moveTo(lineAnim.x1,lineAnim.y1);ctx.lineTo(lineAnim.x2,lineAnim.y2);ctx.stroke();
     ctx.globalAlpha=1;
-  }
-
-  // objects — drawImage from cache
-  for(let i=0;i<objects.length;i++){
-    const o=objects[i];
-    if(o.y<-o.r*3||o.x<-o.r*2||o.x>W+o.r*2) continue;
-
-    // subtle pulse scale for letter/shield only (cheap)
-    let sc=1;
-    if(o.type==='letter'||o.type==='shield') sc=1+Math.sin(o.pulse)*.1;
-
-    const spr=getSprite(o.type,o.r,o.col);
-    const sd=o.r*4*sc;
-    ctx.drawImage(spr, o.x-sd*.5, o.y-sd*.5, sd, sd);
-
-    // letter text overlay
-    if(o.type==='letter'){
-      const lbl=getLetterLabel(o.letter,o.col,o.r);
-      const ls=o.r*2.2*sc;
-      ctx.drawImage(lbl,o.x-ls*.5,o.y-ls*.5,ls,ls);
+    if(lineAnim.t>=1){
+      drawnLines.push({x1:lineAnim.x1,y1:lineAnim.y1,x2:lineAnim.x2t,y2:lineAnim.y2t});
+      lineAnim.active=false;
     }
   }
 
-  // shield ring around player (cheap circle, no gradient)
-  if(invincible>0){
-    const flicker=Math.floor(invincible/6)%2===0;
-    if(!flicker){
-      ctx.strokeStyle='#7FFFD4';
-      ctx.lineWidth=1.5;
-      ctx.globalAlpha=.5;
-      ctx.beginPath();ctx.arc(playerX,py,CW*.52,0,Math.PI*2);ctx.stroke();
+  // ── preview dotted lines (undrawn connections) ──
+  ctx.setLineDash([3,8]);ctx.strokeStyle='rgba(255,255,255,.08)';ctx.lineWidth=1;
+  ctx.globalAlpha=.6;
+  const ord=L.order;
+  for(let i=0;i<ord.length-1;i++){
+    if(i>=nextNode-1){ // only show lines not yet drawn
+      const n1=nodes[ord[i]], n2=nodes[ord[i+1]];
+      ctx.beginPath();ctx.moveTo(n1.x,n1.y);ctx.lineTo(n2.x,n2.y);ctx.stroke();
+    }
+  }
+  ctx.setLineDash([]);ctx.globalAlpha=1;
+
+  // ── nodes ──
+  const nodeR=Math.min(W,H)*0.038;
+  for(let i=0;i<nodes.length;i++){
+    const nd=nodes[i];
+    // only show nodes that appear in order
+    const orderPos=L.order.indexOf(i);
+    if(orderPos<0) continue;
+
+    const isNext=L.order[nextNode]===i;
+    const isDone=nd.done;
+    const pulse=1+Math.sin(twinkle*.07+i*.8)*.18;
+    const hint=nd._hint>0;
+    if(nd._hint>0)nd._hint--;
+
+    // glow
+    const glowR=nodeR*(isDone?2:isNext?2.8*pulse:1.6);
+    ctx.globalAlpha=isDone?.12:isNext?.25*pulse+(hint?.3:0):.08;
+    ctx.fillStyle=isDone?L.col:isNext?'#fff':L.col;
+    ctx.beginPath();ctx.arc(nd.x,nd.y,glowR,0,Math.PI*2);ctx.fill();
+    ctx.globalAlpha=1;
+
+    // core dot
+    const dotR=nodeR*(isDone?.55:isNext?.75:0.45);
+    ctx.fillStyle=isDone?L.col:isNext?'#fff':L.col;
+    ctx.globalAlpha=isDone?.9:isNext?(.7+pulse*.2):.45;
+    ctx.beginPath();ctx.arc(nd.x,nd.y,dotR,0,Math.PI*2);ctx.fill();
+    ctx.globalAlpha=1;
+
+    // number label (show only undone)
+    if(!isDone){
+      const seq=orderPos+1;
+      ctx.fillStyle=isNext?'#fff':L.col;
+      ctx.globalAlpha=isNext?.9:.45;
+      ctx.font=`700 ${Math.round(nodeR*.55)}px Orbitron,monospace`;
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(seq,nd.x,nd.y);
+      ctx.globalAlpha=1;
+    } else {
+      // done — little sparkle
+      ctx.fillStyle='#fff';ctx.globalAlpha=.7;
+      ctx.font=`${Math.round(nodeR*.6)}px serif`;
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText('✦',nd.x,nd.y+1);
       ctx.globalAlpha=1;
     }
   }
 
-  // player cloud — drawImage (pre-rendered)
-  const invFlicker=invincible>0&&Math.floor(invincible/6)%2===0;
-  ctx.globalAlpha=invFlicker?.3:1;
-  ctx.drawImage(cloudSprite, playerX-CW, py-CH*.65, CW*2, CH*2);
-  ctx.globalAlpha=1;
-
-  // ground shadow under cloud
-  ctx.globalAlpha=.1;ctx.fillStyle='#C084FC';
-  ctx.beginPath();ctx.ellipse(playerX,py+CH*.9,CW*.45,CH*.12,0,0,Math.PI*2);ctx.fill();
-  ctx.globalAlpha=1;
+  // ── hint text ──
+  if(nextNode===0){
+    ctx.fillStyle='rgba(255,244,238,.28)';
+    ctx.font=`${Math.round(H*.018)}px Orbitron,monospace`;
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('TAP STAR  1  TO BEGIN',W*.5,H*.93);
+  }
 
   tickP();
-
-  if(shake>0)ctx.restore();
-
-  // HUD score (throttled)
-  if(++scoreFlush>=8){document.getElementById('score-lbl').textContent=score;scoreFlush=0;}
+  if(shakeF>0)ctx.restore();
 }
 
-// ═══════════════════════════════════════════════════
+// ══════════════════════════════════════════════
 //  MAIN LOOP
-// ═══════════════════════════════════════════════════
+// ══════════════════════════════════════════════
 function loop(){
   raf=requestAnimationFrame(loop);
-  if(state!=='playing') return;
-  update();
   draw();
 }
 
-// ═══════════════════════════════════════════════════
-//  HUD
-// ═══════════════════════════════════════════════════
-function buildHUD(){
-  const lr=document.getElementById('letters-row'); lr.innerHTML='';
-  LETTERS.forEach((l,i)=>{
-    const d=document.createElement('div');d.className='lb-l';d.id='ll'+i;d.textContent=l;lr.appendChild(d);
-  });
-  const lv=document.getElementById('lives-row'); lv.innerHTML='';
-  for(let i=0;i<3;i++){
-    const s=document.createElement('span');s.className='life';s.id='lv'+i;s.textContent='💖';lv.appendChild(s);
-  }
-}
-function updateHUD(){
-  for(let i=0;i<LETTERS.length;i++){const e=document.getElementById('ll'+i);if(e)e.className='lb-l'+(collected.includes(i)?' got':'');}
-  for(let i=0;i<3;i++){const e=document.getElementById('lv'+i);if(e)e.className='life'+(i>=lives?' lost':'');}
+// ══════════════════════════════════════════════
+//  REVEAL POPUP
+// ══════════════════════════════════════════════
+const LEVEL_MSGS=[
+  // short "letter fragment" per level — collected at end
+  'F — for the Flame she carries that never goes out, even on hard days.',
+  'A — for the way she Arrives in a room and everything quietly improves.',
+  'V — for her Voice, which sounds like home even in the middle of nowhere.',
+  'O — for how she is the One that makes every ordinary moment feel chosen.',
+  'U — for Unmatched — because honestly, nothing and nobody compares.',
+  'R — for Rare. For Real. For the exact Right person at the exact right time.',
+];
+
+function showReveal(lvl){
+  const L=LEVELS[lvl];
+  completed.push(lvl);
+  updateProgDots();
+
+  // big confetti burst
+  for(let i=0;i<50;i++)
+    setTimeout(()=>spawnP(Math.random()*W,Math.random()*H*.5,L.col,1,5),i*25);
+
+  document.getElementById('rev-constellation').textContent=L.emoji;
+  document.getElementById('rev-name').textContent=L.name;
+  document.getElementById('rev-letter').textContent=L.letter;
+  document.getElementById('rev-msg').textContent=L.msg;
+  document.getElementById('rev-progress').textContent=
+    completed.length<6?`${completed.length} of 6 constellations revealed`:`All 6 unlocked — the letter is complete`;
+
+  document.getElementById('reveal').classList.add('on');
 }
 
-// ═══════════════════════════════════════════════════
+document.getElementById('rev-btn').addEventListener('click',dismissReveal);
+document.getElementById('rev-btn').addEventListener('touchstart',e=>{e.preventDefault();dismissReveal();},{passive:false});
+
+function dismissReveal(){
+  document.getElementById('reveal').classList.remove('on');
+  if(completed.length>=6){
+    setTimeout(()=>endGame(),400);
+  } else {
+    initLevel(completed.length); // next level
+  }
+}
+
+// ══════════════════════════════════════════════
+//  PROG DOTS
+// ══════════════════════════════════════════════
+function updateProgDots(){
+  const row=document.getElementById('prog-row');
+  row.innerHTML='';
+  const LTRS=['F','A','V','O','U','R'];
+  for(let i=0;i<6;i++){
+    const d=document.createElement('div');
+    d.className='prog-dot'+(completed.includes(i)?' done':'');
+    d.textContent=LTRS[i];row.appendChild(d);
+  }
+}
+
+// ══════════════════════════════════════════════
 //  NAV
-// ═══════════════════════════════════════════════════
+// ══════════════════════════════════════════════
 function goTo(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
   document.getElementById(id).classList.add('on');
   const g=id==='s-game';
   document.getElementById('hud').classList.toggle('on',g);
-  document.getElementById('move-hint').classList.toggle('on',g);
-  if(g) setTimeout(()=>document.getElementById('move-hint').classList.remove('on'),3000);
 }
 
 function startGame(){
+  LEVELS=makeLevels();
+  completed=[];pN=0;
   goTo('s-game');
   setTimeout(()=>{
-    resize(); initStars(); initGame();
+    resize();
     state='playing';
-    if(!raf) loop();
+    initLevel(0);
+    updateProgDots();
+    if(!raf)loop();
   },60);
 }
 
-function endGame(result){
-  state=result;
-  document.getElementById('hud').classList.remove('on');
-  document.getElementById('move-hint').classList.remove('on');
-  if(result==='win'){
-    document.getElementById('win-stat').textContent=`Score: ${score} · Letters: ${collected.length}/6`;
-    goTo('s-win');
-    setTimeout(()=>{
-      const c=['#FF2D6B','#F5C842','#C084FC','#FF85AA'];
-      for(let i=0;i<40;i++) spawnP(Math.random()*W,Math.random()*H*.4,c[i%4],1,5);
-    },300);
-  } else {
-    const got=collected.map(i=>LETTERS[i]).join('');
-    document.getElementById('over-msg').textContent=got
-      ?`You caught "${got}" — she's waiting for the rest. 💕`
-      :`The galaxy is full of her stars. Try again. 💕`;
-    document.getElementById('over-stat').textContent=`Score: ${score}`;
-    goTo('s-over');
-  }
+function endGame(){
+  state='idle';
+  // compile full letter
+  const lines=LEVEL_MSGS.join('\n\n');
+  document.getElementById('win-compiled').textContent=
+    'Your letter, written in the stars: F · A · V · O · U · R';
+  document.getElementById('win-stat').textContent='All 6 constellations connected';
+
+  // big final confetti
+  const c=['#FF2D6B','#F5C842','#C084FC','#FF85AA','#50E3C2'];
+  for(let i=0;i<80;i++)
+    setTimeout(()=>spawnP(Math.random()*W,Math.random()*H*.5,c[i%5],1,6),i*35);
+
+  goTo('s-win');
 }
 
-// ═══════════════════════════════════════════════════
+// ══════════════════════════════════════════════
 //  INPUT
-// ═══════════════════════════════════════════════════
-const keys={left:false,right:false};
-
-// touch drag
-canvas.addEventListener('touchstart',e=>{
-  e.preventDefault();targetX=e.touches[0].clientX*(W/canvas.offsetWidth);
+// ══════════════════════════════════════════════
+function getPos(e){
+  const r=canvas.getBoundingClientRect();
+  const scaleX=W/r.width, scaleY=H/r.height;
+  const src=e.touches?e.touches[0]:e;
+  return{x:(src.clientX-r.left)*scaleX,y:(src.clientY-r.top)*scaleY};
+}
+canvas.addEventListener('touchend',e=>{
+  e.preventDefault();
+  const p=getPos(e.changedTouches?{touches:[e.changedTouches[0]]}:e);
+  onTap(p.x,p.y);
 },{passive:false});
-canvas.addEventListener('touchmove',e=>{
-  e.preventDefault();targetX=e.touches[0].clientX*(W/canvas.offsetWidth);
-},{passive:false});
-
-// mouse
-let md=false;
-canvas.addEventListener('mousedown',e=>{md=true;targetX=e.clientX*(W/canvas.offsetWidth);});
-canvas.addEventListener('mousemove',e=>{if(md)targetX=e.clientX*(W/canvas.offsetWidth);});
-window.addEventListener('mouseup',()=>md=false);
-
-// keyboard
-window.addEventListener('keydown',e=>{
-  if(e.code==='ArrowLeft'||e.code==='KeyA')  keys.left=true;
-  if(e.code==='ArrowRight'||e.code==='KeyD') keys.right=true;
+canvas.addEventListener('click',e=>{
+  const p=getPos(e);onTap(p.x,p.y);
 });
-window.addEventListener('keyup',e=>{
-  if(e.code==='ArrowLeft'||e.code==='KeyA')  keys.left=false;
-  if(e.code==='ArrowRight'||e.code==='KeyD') keys.right=false;
-});
-
-// device tilt
-window.addEventListener('deviceorientation',e=>{
-  if(e.gamma!=null) targetX=W*.5+(e.gamma/45)*(W*.44);
-},{passive:true});
 
 window.addEventListener('resize',()=>{
   resize();
-  if(state==='playing'){
-    playerX=Math.min(W-CW*.5,Math.max(CW*.5,playerX));
-    targetX=playerX;
-  }
+  if(state==='playing') initLevel(level);
 });
 
-// ═══════════════════════════════════════════════════
-//  BUTTONS
-// ═══════════════════════════════════════════════════
 function wire(id,fn){
   const el=document.getElementById(id);
   el.addEventListener('click',fn);
@@ -766,10 +650,8 @@ function wire(id,fn){
 }
 wire('btn-start',startGame);
 wire('btn-wr',startGame);
-wire('btn-retry',startGame);
-wire('btn-menu',()=>{state='idle';goTo('s-intro');});
 
-loop();
+loop(); // idle starfield
 </script>
 </body>
 </html>
