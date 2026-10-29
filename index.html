@@ -1,344 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cupid Ibukun - 7 Months 💘</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Favour’s Padlock</title>
+<style>
+:root{--ink:#fff7ef;--bg1:#2a1238;--bg2:#e8607a;--gold:#ffc857;--card:#fff7ef;--text:#3a1442;box-sizing:border-box}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+html,body{margin:0;min-height:100%;background:var(--bg1);color:var(--ink);font-family:Georgia,"Times New Roman",serif;overscroll-behavior:none}
+#app{min-height:100vh;background:linear-gradient(180deg,var(--bg1) 0%,#7a2a62 60%,var(--bg2) 100%);padding:calc(14px + env(safe-area-inset-top,0px)) 14px calc(24px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;align-items:center}
+.wrap{width:100%;max-width:420px}
+h1{margin:0 0 6px;font-size:24px;line-height:1.15}
+.sub{margin:0 0 12px;font-size:15px;line-height:1.4;opacity:.9}
+.clue{display:flex;align-items:center;gap:10px;background:rgba(255,247,239,.1);border-radius:12px;padding:8px 10px;margin-bottom:7px}
+.digs{display:flex;gap:4px;flex:none}
+.digs b{width:28px;height:34px;border-radius:7px;background:var(--card);color:var(--text);display:flex;align-items:center;justify-content:center;font-size:20px}
+.clue span{font-size:14px;line-height:1.3}
+#lock{margin:14px auto 0;width:292px}
+.shackle{width:112px;height:74px;border:15px solid #cfd3da;border-bottom:0;border-radius:64px 64px 0 0;margin:0 auto -3px;transition:transform .5s ease}
+.open .shackle{transform:translateY(-22px);border-color:var(--gold)}
+.body{background:linear-gradient(180deg,#ffd978,#e3a92f);border-radius:22px;padding:16px 12px 14px;box-shadow:0 8px 0 #a8741a}
+#wheels{display:flex;justify-content:space-between;gap:8px;background:#5c3a0e;border-radius:14px;padding:8px}
+.wh{flex:1;display:flex;flex-direction:column;align-items:center}
+.wh button.a{width:100%;height:30px;font-size:15px;background:none;color:var(--gold);padding:0;border-radius:8px}
+.win{width:100%;height:92px;background:#2a1238;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;touch-action:none;overflow:hidden}
+.win i{font-style:normal;font-size:20px;line-height:24px;color:rgba(255,247,239,.3)}
+.win em{font-style:normal;font-size:38px;line-height:44px;font-weight:bold;color:var(--gold)}
+button{font:inherit;color:#fff;border:0;cursor:pointer}
+#unlock{display:block;margin:14px auto 0;font-size:18px;font-weight:bold;background:#d8325f;border-radius:999px;padding:12px 34px}
+button:active{transform:scale(.96)}
+#note{min-height:22px;text-align:center;margin-top:12px;font-size:15px;color:var(--gold)}
+.shake{animation:sh .4s}
+@keyframes sh{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.ov{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(30,10,40,.85);z-index:5;text-align:center;overflow:hidden}
+.ov.show{display:flex}
+.card{position:relative;z-index:2;background:var(--card);color:var(--text);border-radius:22px;padding:26px 22px;max-width:340px;width:100%}
+.card h2{margin:0 0 8px;font-size:26px;line-height:1.15}
+.card p{margin:0 0 16px;font-size:16px;line-height:1.45}
+.big{font-size:30px;color:#d8325f;font-weight:bold;margin:0 0 14px}
+.card button{background:#d8325f;font-size:18px;font-weight:bold;border-radius:999px;padding:12px 28px}
+.fl{position:absolute;bottom:-40px;font-size:26px;animation:up 4s linear infinite;z-index:1}
+@keyframes up{to{transform:translateY(-120vh)}}
+@media (prefers-reduced-motion:reduce){.fl{animation:none;bottom:20%}.shake{animation:none}}
+</style>
 </head>
-<body style="margin:0; padding:0; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:linear-gradient(180deg,#2b0a3d 0%, #5c1a5c 40%, #ff6f91 100%); min-height:100vh; overflow:hidden;">
+<body>
+<div id="app"><div class="wrap">
+  <h1>Favour’s padlock 🔒</h1>
+  <p class="sub">Something special is locked inside. Five clues point to one secret 4-digit code. Work it out, then turn the wheels.</p>
+  <div id="clues"></div>
 
-  <!-- START SCREEN -->
-  <div id="startScreen" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; text-align:center; padding:20px; box-sizing:border-box; position:relative; z-index:5;">
-    <div style="font-size:60px; animation:pulse 1.5s infinite;">🏹💘</div>
-    <h1 style="color:#fff; font-size:30px; margin:10px 0; text-shadow:1px 1px 4px rgba(0,0,0,0.4);">Cupid Ibukun</h1>
-    <h2 style="color:#ffd6e0; font-size:20px; margin:0 0 20px 0; font-weight:400;">Shoot your arrows of love at Favour's hearts 💕<br>7 Months and counting!</h2>
-    <p style="color:#ffe3ea; max-width:340px; font-size:15px; line-height:1.5; margin-bottom:25px;">
-      Click and hold to pull back the bow, aim at a heart, then release to fire.<br>
-      You've got 30 seconds, Cupid!
-    </p>
-    <button id="startBtn" style="background:#ff2e63; color:white; border:none; padding:16px 40px; border-radius:30px; font-size:18px; font-weight:bold; cursor:pointer; box-shadow:0 6px 14px rgba(255,46,99,0.6);">
-      Take Aim 🏹
-    </button>
+  <div id="lock">
+    <div class="shackle"></div>
+    <div class="body"><div id="wheels"></div></div>
   </div>
+  <button id="unlock">Unlock</button>
+  <div id="note"></div>
+</div></div>
 
-  <!-- GAME SCREEN -->
-  <div id="gameScreen" style="display:none; position:relative; width:100%; height:100vh;">
-    <div style="position:absolute; top:0; left:0; right:0; z-index:10; display:flex; justify-content:space-between; padding:14px 20px; box-sizing:border-box; color:#fff; font-weight:bold; font-size:18px; background:rgba(0,0,0,0.25);">
-      <div>💘 Hearts Hit: <span id="score">0</span></div>
-      <div>⏱ <span id="timer">30</span>s</div>
-    </div>
-    <canvas id="gameCanvas" style="display:block; touch-action:none;"></canvas>
-    <div id="floatMsgLayer" style="position:absolute; top:70px; left:0; width:100%; pointer-events:none; z-index:11;"></div>
-  </div>
+<div class="ov" id="win"><div class="card">
+  <h2 id="gt">Your gift</h2>
+  <p id="gn"></p>
+  <div class="big">Favour Bello 💖</div>
+  <button id="again">Play again</button>
+</div></div>
 
-  <!-- END SCREEN -->
-  <div id="endScreen" style="display:none; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; text-align:center; padding:20px; box-sizing:border-box; position:relative; z-index:5;">
-    <div style="font-size:55px;">🏆💘</div>
-    <h1 id="endTitle" style="color:#fff; font-size:26px; margin:10px 0; text-shadow:1px 1px 4px rgba(0,0,0,0.4);">You hit <span id="finalScore">0</span> hearts!</h1>
-    <div style="background:rgba(255,255,255,0.9); border-radius:18px; padding:22px; max-width:360px; margin:15px 0; box-shadow:0 8px 20px rgba(0,0,0,0.25);">
-      <p style="color:#5c1530; font-size:16px; line-height:1.6; margin:0;">
-        To my Favour,<br><br>
-        Every arrow I shot tonight was really just me, still aiming for your heart after 7 months — and somehow still hitting bullseye every time.<br><br>
-        Thank you for being the target I never get tired of chasing. Here's to many more months of us. 💘<br><br>
-        Forever your Cupid,<br>Ibukun
-      </p>
-    </div>
-    <button id="replayBtn" style="background:#ff2e63; color:white; border:none; padding:14px 36px; border-radius:30px; font-size:16px; font-weight:bold; cursor:pointer; box-shadow:0 6px 14px rgba(255,46,99,0.6); margin-top:10px;">
-      Shoot Again 🏹
-    </button>
-  </div>
+<script>
+// ====== EDIT YOUR GIFT HERE ======
+var GIFT_TITLE = "You cracked it! 🎉";
+var GIFT_NOTE  = "Replace this text with your real gift: a voucher, a date, a promise, anything.";
+// =================================
 
-  <style>
-    @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.15);} }
-    button:active { transform:scale(0.96); }
-    .floatMsg {
-      position:absolute; left:50%; transform:translateX(-50%);
-      background:rgba(255,255,255,0.92); color:#7a1f3d; padding:10px 18px;
-      border-radius:20px; font-size:14px; font-weight:bold; max-width:80%;
-      text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.2);
-      animation:popUp 2.5s ease-out forwards;
+var CODE = "7305"; // the clues below are checked to point to ONLY this code
+var CL = [
+  ["2934", "One number is right, but in the wrong place."],
+  ["3965", "One number is right and well placed. Another is right but in the wrong place."],
+  ["1397", "One number is right and well placed. Another is right but in the wrong place."],
+  ["9302", "Two numbers are right and both well placed."],
+  ["4892", "Nothing here is in the code."]
+];
+var vals = [0,0,0,0], wheels = [], locked = true;
+var note = document.getElementById("note"), lockEl = document.getElementById("lock");
+
+var cl = document.getElementById("clues");
+CL.forEach(function(c){
+  var d = document.createElement("div"); d.className = "clue";
+  var g = document.createElement("div"); g.className = "digs";
+  c[0].split("").forEach(function(n){ var b = document.createElement("b"); b.textContent = n; g.appendChild(b); });
+  var s = document.createElement("span"); s.textContent = c[1];
+  d.appendChild(g); d.appendChild(s); cl.appendChild(d);
+});
+
+function render(i) {
+  var v = vals[i], w = wheels[i];
+  w.p.textContent = (v + 9) % 10; w.c.textContent = v; w.n.textContent = (v + 1) % 10;
+}
+function stepWheel(i, d) { if (!locked) return; vals[i] = (vals[i] + d + 10) % 10; render(i); }
+
+var wh = document.getElementById("wheels");
+[0,1,2,3].forEach(function(i){
+  var col = document.createElement("div"); col.className = "wh";
+  var up = document.createElement("button"); up.className = "a"; up.textContent = "▲"; up.setAttribute("aria-label", "Up");
+  var win = document.createElement("div"); win.className = "win";
+  var p = document.createElement("i"), c = document.createElement("em"), n = document.createElement("i");
+  win.appendChild(p); win.appendChild(c); win.appendChild(n);
+  var dn = document.createElement("button"); dn.className = "a"; dn.textContent = "▼"; dn.setAttribute("aria-label", "Down");
+  col.appendChild(up); col.appendChild(win); col.appendChild(dn); wh.appendChild(col);
+  wheels[i] = {p:p, c:c, n:n};
+  up.onclick = function(){ stepWheel(i, 1); };
+  dn.onclick = function(){ stepWheel(i, -1); };
+
+  var y0 = 0, acc = 0, on = false;
+  function start(y){ on = true; y0 = y; acc = 0; }
+  function mv(y){ if (!on) return; acc += y0 - y; y0 = y;
+    while (acc >= 26) { stepWheel(i, 1); acc -= 26; }
+    while (acc <= -26) { stepWheel(i, -1); acc += 26; } }
+  win.addEventListener("touchstart", function(e){ start(e.touches[0].clientY); e.preventDefault(); }, {passive:false});
+  win.addEventListener("touchmove", function(e){ mv(e.touches[0].clientY); e.preventDefault(); }, {passive:false});
+  win.addEventListener("touchend", function(){ on = false; });
+  win.addEventListener("mousedown", function(e){ start(e.clientY); });
+  window.addEventListener("mousemove", function(e){ mv(e.clientY); });
+  window.addEventListener("mouseup", function(){ on = false; });
+  win.addEventListener("wheel", function(e){ stepWheel(i, e.deltaY > 0 ? 1 : -1); e.preventDefault(); }, {passive:false});
+  render(i);
+});
+
+document.getElementById("unlock").onclick = function(){
+  if (!locked) return;
+  if (vals.join("") === CODE) {
+    locked = false; lockEl.classList.add("open"); note.textContent = "Click! 🔓";
+    setTimeout(openGift, 1000);
+  } else {
+    note.textContent = "Not quite. Check the clues again.";
+    lockEl.classList.remove("shake"); void lockEl.offsetWidth; lockEl.classList.add("shake");
+  }
+};
+
+function openGift() {
+  document.getElementById("gt").textContent = GIFT_TITLE;
+  document.getElementById("gn").textContent = GIFT_NOTE;
+  var ov = document.getElementById("win");
+  if (!ov.querySelector(".fl")) {
+    var em = ["💖","✨","💛","🎈","🎉"];
+    for (var k = 0; k < 14; k++) {
+      var s = document.createElement("span"); s.className = "fl"; s.textContent = em[k % 5];
+      s.style.left = (k * 7 + 2) + "%"; s.style.animationDelay = (k * .3) + "s"; ov.appendChild(s);
     }
-    @keyframes popUp { 0%{opacity:1; transform:translate(-50%,0) scale(1);} 100%{opacity:0; transform:translate(-50%,-40px) scale(1.3);} }
-    .confetti { position:fixed; top:-20px; font-size:20px; pointer-events:none; animation:confettiFall linear forwards; z-index:999; }
-    @keyframes confettiFall { to { transform:translateY(110vh) rotate(720deg); opacity:0.3; } }
-  </style>
-
-  <script>
-    const startScreen = document.getElementById('startScreen');
-    const gameScreen = document.getElementById('gameScreen');
-    const endScreen = document.getElementById('endScreen');
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-    const scoreEl = document.getElementById('score');
-    const timerEl = document.getElementById('timer');
-    const finalScoreEl = document.getElementById('finalScore');
-    const endTitle = document.getElementById('endTitle');
-    const floatMsgLayer = document.getElementById('floatMsgLayer');
-
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    resize();
-    window.addEventListener('resize', resize);
-
-    let score = 0, timeLeft = 30;
-    let gameInterval, spawnInterval, rafId;
-    let hearts = [];
-    let arrows = [];
-
-    const bow = { x: 0, y: 0 }; // set on start
-    let aiming = false;
-    let pullStart = { x: 0, y: 0 };
-    let pointer = { x: 0, y: 0 };
-
-    const messages = [
-      { at: 3, text: "Nice shot, Favour is impressed already! 😍" },
-      { at: 6, text: "Cupid mode fully activated 🏹💘" },
-      { at: 10, text: "You're unstoppable — just like our love 💞" },
-      { at: 14, text: "Favour's heart never stood a chance 😘" }
-    ];
-    let shownMessages = new Set();
-
-    function showFloatMsg(text) {
-      const msg = document.createElement('div');
-      msg.className = 'floatMsg';
-      msg.textContent = text;
-      floatMsgLayer.appendChild(msg);
-      setTimeout(() => msg.remove(), 2500);
-    }
-
-    function checkMilestone() {
-      messages.forEach(m => {
-        if (score >= m.at && !shownMessages.has(m.at)) {
-          shownMessages.add(m.at);
-          showFloatMsg(m.text);
-        }
-      });
-    }
-
-    function spawnHeart() {
-      const size = 26 + Math.random() * 14;
-      const side = Math.random() < 0.5 ? -1 : 1; // spawn direction
-      const y = 100 + Math.random() * (canvas.height * 0.55);
-      hearts.push({
-        x: side === -1 ? -size : canvas.width + size,
-        y: y,
-        size: size,
-        vx: side === -1 ? (1 + Math.random() * 1.5) : -(1 + Math.random() * 1.5),
-        wobble: Math.random() * Math.PI * 2,
-        alive: true
-      });
-    }
-
-    function drawHeart(x, y, size, color) {
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.fillStyle = color;
-      ctx.beginPath();
-      const s = size / 2;
-      ctx.moveTo(0, s * 0.6);
-      ctx.bezierCurveTo(-s, -s * 0.4, -s * 1.3, s * 0.7, 0, s * 1.5);
-      ctx.bezierCurveTo(s * 1.3, s * 0.7, s, -s * 0.4, 0, s * 0.6);
-      ctx.fill();
-      ctx.restore();
-    }
-
-    function drawBow(x, y, angle, pull) {
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate(angle);
-      ctx.strokeStyle = '#7a3b12';
-      ctx.lineWidth = 6;
-      ctx.beginPath();
-      ctx.arc(0, 0, 34, -Math.PI / 2.3, Math.PI / 2.3);
-      ctx.stroke();
-      // string
-      ctx.strokeStyle = '#fff';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      const topX = 34 * Math.cos(-Math.PI / 2.3);
-      const topY = 34 * Math.sin(-Math.PI / 2.3);
-      const botX = 34 * Math.cos(Math.PI / 2.3);
-      const botY = 34 * Math.sin(Math.PI / 2.3);
-      const pullBack = -pull;
-      ctx.moveTo(topX, topY);
-      ctx.lineTo(pullBack, 0);
-      ctx.lineTo(botX, botY);
-      ctx.stroke();
-      ctx.restore();
-    }
-
-    function getPointerPos(e) {
-      const rect = canvas.getBoundingClientRect();
-      if (e.touches && e.touches.length) {
-        return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
-      }
-      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
-    }
-
-    function startAim(e) {
-      aiming = true;
-      pointer = getPointerPos(e);
-    }
-    function moveAim(e) {
-      if (!aiming) return;
-      pointer = getPointerPos(e);
-    }
-    function releaseAim(e) {
-      if (!aiming) return;
-      aiming = false;
-      const dx = bow.x - pointer.x;
-      const dy = bow.y - pointer.y;
-      const dist = Math.min(Math.hypot(dx, dy), 120);
-      const angle = Math.atan2(pointer.y - bow.y, pointer.x - bow.x);
-      const speed = 6 + (dist / 120) * 14;
-      arrows.push({
-        x: bow.x,
-        y: bow.y,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed,
-        angle: angle,
-        alive: true
-      });
-    }
-
-    canvas.addEventListener('mousedown', startAim);
-    canvas.addEventListener('mousemove', moveAim);
-    canvas.addEventListener('mouseup', releaseAim);
-    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startAim(e); }, { passive: false });
-    canvas.addEventListener('touchmove', (e) => { e.preventDefault(); moveAim(e); }, { passive: false });
-    canvas.addEventListener('touchend', (e) => { e.preventDefault(); releaseAim(e); }, { passive: false });
-
-    function update() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // background stars/sparkle
-      ctx.fillStyle = 'rgba(255,255,255,0.06)';
-      for (let i = 0; i < 20; i++) {
-        ctx.fillRect((i * 97) % canvas.width, (i * 53) % canvas.height, 2, 2);
-      }
-
-      // hearts
-      hearts.forEach(h => {
-        if (!h.alive) return;
-        h.x += h.vx;
-        h.wobble += 0.05;
-        h.y += Math.sin(h.wobble) * 0.4;
-        drawHeart(h.x, h.y, h.size, '#ff4d6d');
-      });
-      hearts = hearts.filter(h => h.alive && h.x > -60 && h.x < canvas.width + 60);
-
-      // arrows
-      arrows.forEach(a => {
-        if (!a.alive) return;
-        a.x += a.vx;
-        a.y += a.vy;
-        ctx.save();
-        ctx.translate(a.x, a.y);
-        ctx.rotate(a.angle);
-        ctx.strokeStyle = '#3d2b1f';
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.moveTo(-18, 0);
-        ctx.lineTo(10, 0);
-        ctx.stroke();
-        ctx.fillStyle = '#3d2b1f';
-        ctx.beginPath();
-        ctx.moveTo(10, 0);
-        ctx.lineTo(2, -5);
-        ctx.lineTo(2, 5);
-        ctx.fill();
-        ctx.restore();
-
-        // collision check
-        hearts.forEach(h => {
-          if (h.alive && Math.hypot(a.x - h.x, a.y - h.y) < h.size / 2 + 6) {
-            h.alive = false;
-            a.alive = false;
-            score++;
-            scoreEl.textContent = score;
-            checkMilestone();
-          }
-        });
-
-        if (a.x < -20 || a.x > canvas.width + 20 || a.y < -20 || a.y > canvas.height + 20) {
-          a.alive = false;
-        }
-      });
-      arrows = arrows.filter(a => a.alive);
-
-      // bow
-      const angle = aiming ? Math.atan2(pointer.y - bow.y, pointer.x - bow.x) : 0;
-      const pull = aiming ? Math.min(Math.hypot(bow.x - pointer.x, bow.y - pointer.y), 40) : 0;
-      drawBow(bow.x, bow.y, angle, pull);
-
-      rafId = requestAnimationFrame(update);
-    }
-
-    function startGame() {
-      startScreen.style.display = 'none';
-      endScreen.style.display = 'none';
-      gameScreen.style.display = 'block';
-      resize();
-      bow.x = canvas.width / 2;
-      bow.y = canvas.height - 60;
-      score = 0;
-      timeLeft = 30;
-      hearts = [];
-      arrows = [];
-      shownMessages = new Set();
-      scoreEl.textContent = score;
-      timerEl.textContent = timeLeft;
-
-      spawnInterval = setInterval(spawnHeart, 900);
-      gameInterval = setInterval(() => {
-        timeLeft--;
-        timerEl.textContent = timeLeft;
-        if (timeLeft <= 0) endGame();
-      }, 1000);
-
-      rafId = requestAnimationFrame(update);
-    }
-
-    function endGame() {
-      clearInterval(gameInterval);
-      clearInterval(spawnInterval);
-      cancelAnimationFrame(rafId);
-      gameScreen.style.display = 'none';
-      endScreen.style.display = 'flex';
-      finalScoreEl.textContent = score;
-
-      if (score >= 15) {
-        endTitle.textContent = "Cupid Legend! " + score + " hearts hit 🏆";
-      } else if (score >= 8) {
-        endTitle.textContent = "Great aim! " + score + " hearts hit 🎯";
-      } else {
-        endTitle.textContent = score + " hearts hit — Cupid needs more practice 😅";
-      }
-
-      launchConfetti();
-    }
-
-    function launchConfetti() {
-      const emojis = ['🎉','💘','🎊','💖','✨'];
-      for (let i = 0; i < 40; i++) {
-        setTimeout(() => {
-          const c = document.createElement('div');
-          c.className = 'confetti';
-          c.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-          c.style.left = Math.random() * 100 + 'vw';
-          c.style.animationDuration = (2 + Math.random() * 2) + 's';
-          document.body.appendChild(c);
-          setTimeout(() => c.remove(), 4500);
-        }, i * 60);
-      }
-    }
-
-    document.getElementById('startBtn').addEventListener('click', startGame);
-    document.getElementById('replayBtn').addEventListener('click', startGame);
-  </script>
-
+  }
+  ov.classList.add("show");
+}
+document.getElementById("again").onclick = function(){
+  document.getElementById("win").classList.remove("show");
+  locked = true; lockEl.classList.remove("open"); note.textContent = "";
+  vals = [0,0,0,0]; for (var i = 0; i < 4; i++) render(i);
+};
+</script>
 </body>
 </html>
-
